@@ -1,7 +1,0 @@
-eclipse.preferences.version=1
-encoding//WebContent/index.jsp=UTF-8
-encoding//src/com/cg/mchtdata/servlet/DownLoadServlet.java=UTF-8
-encoding//src/com/cg/mchtdata/servlet/ExcuteShellServlet.java=UTF-8
-encoding//src/com/cg/mchtdata/servlet/ListFileServlet.java=UTF-8
-encoding//src/com/cg/mchtdata/utils/HttpsPost.java=UTF-8
-encoding/<project>=UTF-8
