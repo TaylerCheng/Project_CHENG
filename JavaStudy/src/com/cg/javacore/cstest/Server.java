@@ -8,6 +8,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+* ¹þ¹þ
+*/
 public class Server {
 
 	public ServerSocket serverSocket = null;

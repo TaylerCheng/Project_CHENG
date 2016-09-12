@@ -1,21 +1,97 @@
 
 package com.cg.javacore;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 import java.util.Set;
 
 public abstract class HelloWorld
 {
 
+	public static class BTNode
+	{
+
+		public BTNode( char data, BTNode leftNode, BTNode rightNode )
+		{
+			this.data = data;
+			this.leftNode = leftNode;
+			this.rightNode = rightNode;
+		}
+
+		public char data;
+		public BTNode leftNode;
+		public BTNode rightNode;
+
+		public void preOrder( )
+		{
+			if ( leftNode != null )
+				leftNode.preOrder( );
+			if ( rightNode != null )
+				rightNode.preOrder( );
+			System.out.println( data );
+
+		}
+
+	}
+
 	public static void main( String[] args )
 	{
+
+//		BTNode nodeO = new BTNode( 'O', null, null );
+//		BTNode nodeR = new BTNode( 'R', null, null );
+//		BTNode nodeT = new BTNode( 'T', null, null );
+//
+//		BTNode nodeL = new BTNode( 'L', nodeO, nodeR );
+//		BTNode nodeG = new BTNode( 'G', null, nodeT );
+//		BTNode nodeA = new BTNode( 'A', nodeL, nodeG );
+//
+//		nodeA.preOrder( );
+
+		int[] array = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		System.out.println( "3在数组中的位置:" + search( array, 3 ) );
+	}
+
+	private static int search( int[] array, int target )
+	{
+		return binarySearch( 0, array.length - 1, array, target );
+	}
+
+	private static int binarySearch( int start, int end, int[] array,
+			int target )
+	{
+		if ( end < start || start < 0 )
+		{
+			return -1;
+		}
+		int middle = ( start + end ) / 2;
+		if ( target == array[middle] )
+		{
+			return middle;
+		}
+		else if ( target < array[middle] )
+		{
+			end = middle - 1;
+		}
+		else
+		{
+			start = middle + 1;
+		}
+		return binarySearch( start, end, array, target );
+	}
+
+	private static void testLoop( int i )
+	{
+		while ( i < 1 )
+		{
+			System.out.println( i );
+			testLoop( i++ );
+		}
+	}
+
+	public static void getSystemProp( )
+	{
+
 		// Map map = System.getenv( );
 		// Iterator it = map.entrySet( ).iterator( );
 		// while ( it.hasNext( ) )
@@ -77,7 +153,8 @@ public abstract class HelloWorld
 		// Construct result
 		int resultSize = list.size( );
 		if ( limit == 0 )
-			while ( resultSize > 0 && list.get( resultSize - 1 ).length( ) == 0 )
+			while ( resultSize > 0 &&
+					list.get( resultSize - 1 ).length( ) == 0 )
 				resultSize--;
 		String[] result = new String[resultSize];
 		return list.subList( 0, resultSize ).toArray( result );
