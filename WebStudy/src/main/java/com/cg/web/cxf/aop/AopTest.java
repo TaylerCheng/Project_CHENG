@@ -13,7 +13,7 @@ public class AopTest {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         IMyHelloService iMyHelloService = (IMyHelloService) applicationContext.getBean("proxyFactoryBean");
         iMyHelloService.sayHello();
-
+        iMyHelloService.sayBye();
     }
 
 }

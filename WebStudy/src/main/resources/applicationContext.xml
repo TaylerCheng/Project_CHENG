@@ -19,8 +19,19 @@
 
     <!--被代理的对象-->
     <bean id="iMyHelloService" class="com.cg.web.cxf.aop.service.impl.MyHelloServiceImpl"/>
-    <!--通知类-->
+    <!--前置通知类-->
     <bean id="myMethodBeforeAdvice" class="com.cg.web.cxf.aop.advice.MyMethodBeforeAdvice"/>
+
+    <!--定义引入通知，引入通知是通过配置的，实现自定义切入点，和上述四个通知配合使用 -->
+    <bean id="nameMatchMethodPointcutAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="myMethodBeforeAdvice"/>
+        <property name="mappedNames">
+            <list>
+                <value>sayH*</value>
+            </list>
+        </property>
+    </bean>
+
 
     <!--定义代理类-->
     <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
@@ -33,7 +44,8 @@
         <!--定义通知（拦截器）-->
         <property name="interceptorNames">
             <list>
-                <value>myMethodBeforeAdvice</value>
+                <!--<value>myMethodBeforeAdvice</value>-->
+                <value>nameMatchMethodPointcutAdvisor</value>
             </list>
         </property>
         <!--定义代理对象，织入通知-->

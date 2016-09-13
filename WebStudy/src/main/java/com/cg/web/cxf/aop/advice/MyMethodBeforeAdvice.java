@@ -11,6 +11,6 @@ public class MyMethodBeforeAdvice implements MethodBeforeAdvice {
 
     @Override
     public void before(Method method, Object[] objects, Object o) throws Throwable {
-        System.out.println("在方法调用前干些什么 method = " + method);
+        System.out.println("前置通知 method = " + method.getName());
     }
 }

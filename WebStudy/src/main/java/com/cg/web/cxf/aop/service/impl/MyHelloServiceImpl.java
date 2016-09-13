@@ -9,6 +9,11 @@ public class MyHelloServiceImpl implements IMyHelloService {
 
     @Override
     public void sayHello() {
-        System.out.println("Hello");
+        System.out.println("sayHello");
+    }
+
+    @Override
+    public void sayBye() {
+        System.out.println("sayBye");
     }
 }

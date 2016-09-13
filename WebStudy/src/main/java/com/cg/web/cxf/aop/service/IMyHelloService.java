@@ -5,4 +5,5 @@ package com.cg.web.cxf.aop.service;
  */
 public interface IMyHelloService {
     void sayHello();
+    void sayBye();
 }
