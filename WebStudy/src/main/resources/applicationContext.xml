@@ -13,8 +13,32 @@
     <!--<bean id="client" class="com.cg.web.cxf.service.HelloWorld" factory-bean="clientFactory" factory-method="create"/>-->
 
     <!--<bean id="clientFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">-->
-        <!--<property name="serviceClass" value="com.cg.web.cxf.service.HelloWorld"/>-->
-        <!--<property name="address" value="http://localhost:8080/s/webservice/helloWorld"/>-->
+    <!--<property name="serviceClass" value="com.cg.web.cxf.service.HelloWorld"/>-->
+    <!--<property name="address" value="http://localhost:8080/s/webservice/helloWorld"/>-->
     <!--</bean>-->
+
+    <!--被代理的对象-->
+    <bean id="iMyHelloService" class="com.cg.web.cxf.aop.service.impl.MyHelloServiceImpl"/>
+    <!--通知类-->
+    <bean id="myMethodBeforeAdvice" class="com.cg.web.cxf.aop.advice.MyMethodBeforeAdvice"/>
+
+    <!--定义代理类-->
+    <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!--定义代理的接口-->
+        <property name="proxyInterfaces" >
+            <list>
+                <value>com.cg.web.cxf.aop.service.IMyHelloService</value>
+            </list>
+        </property>
+        <!--定义通知（拦截器）-->
+        <property name="interceptorNames">
+            <list>
+                <value>myMethodBeforeAdvice</value>
+            </list>
+        </property>
+        <!--定义代理对象，织入通知-->
+        <property name="target" ref="iMyHelloService"/>
+    </bean>
+
 
 </beans>
