@@ -4,21 +4,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--前置通知类-->
-    <bean id="myMethodBeforeAdvice" class="com.cg.web.cxf.aop.advice.MyMethodBeforeAdvice"/>
+    <bean id="myMethodBeforeAdvice" class="com.cg.web.spring.aop.advice.MyMethodBeforeAdvice"/>
 
     <!--被代理的对象-->
-    <bean id="iMyHelloService" class="com.cg.web.cxf.aop.service.impl.MyHelloServiceImpl"/>
-    <bean id="pojoHelloService" class="com.cg.web.cxf.aop.service.impl.PojoHelloService"/>
+    <bean id="iMyHelloService" class="com.cg.web.spring.aop.service.impl.MyHelloServiceImpl"/>
+    <bean id="pojoHelloService" class="com.cg.web.spring.aop.service.impl.PojoHelloService"/>
 
     <aop:config>
          <!--全局切点-->
         <aop:pointcut id="sayHello"
-                      expression="execution(* com.cg.web.cxf.aop.service.impl.PojoHelloService.sayHello(..))"/>
+                      expression="execution(* com.cg.web.spring.aop.service.impl.PojoHelloService.sayHello(..))"/>
 
         <aop:aspect ref="myMethodBeforeAdvice">
             <!--切面的切点-->
             <aop:pointcut id="sayHelloToSomeBody"
-                          expression="execution(* com.cg.web.cxf.aop.service.impl.PojoHelloService.sayHelloToSomeBody(String)) and args(name)"/>
+                          expression="execution(* com.cg.web.spring.aop.service.impl.PojoHelloService.sayHelloToSomeBody(String)) and args(name)"/>
 
             <aop:before pointcut-ref="sayHello" method="beforeHello" />
             <!--可传参数进去-->
@@ -43,7 +43,7 @@
     <!--&lt;!&ndash;定义代理的接口&ndash;&gt;-->
     <!--<property name="proxyInterfaces" >-->
     <!--<list>-->
-    <!--<value>com.cg.web.cxf.aop.service.IMyHelloService</value>-->
+    <!--<value>com.cg.web.spring.aop.service.IMyHelloService</value>-->
     <!--</list>-->
     <!--</property>-->
     <!--&lt;!&ndash;定义通知（拦截器）&ndash;&gt;-->

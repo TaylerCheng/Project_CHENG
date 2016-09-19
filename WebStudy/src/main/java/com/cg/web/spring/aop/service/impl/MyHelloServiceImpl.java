@@ -1,6 +1,6 @@
-package com.cg.web.cxf.aop.service.impl;
+package com.cg.web.spring.aop.service.impl;
 
-import com.cg.web.cxf.aop.service.IMyHelloService;
+import com.cg.web.spring.aop.service.IMyHelloService;
 
 /**
  * Created by Cheng Guang on 2016/9/12.

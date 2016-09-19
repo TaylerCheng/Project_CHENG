@@ -27,7 +27,7 @@
 
     <servlet>
         <servlet-name>TestServlet</servlet-name>
-        <servlet-class>com.cg.web.cxf.servlet.TestServlet</servlet-class>
+        <servlet-class>com.cg.web.servlet.TestServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

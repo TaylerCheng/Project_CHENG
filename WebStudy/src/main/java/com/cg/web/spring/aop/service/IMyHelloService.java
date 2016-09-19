@@ -1,4 +1,4 @@
-package com.cg.web.cxf.aop.service;
+package com.cg.web.spring.aop.service;
 
 /**
  * Created by Cheng Guang on 2016/9/12.

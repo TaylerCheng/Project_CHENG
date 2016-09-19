@@ -1,4 +1,4 @@
-package com.cg.web.cxf.servlet;
+package com.cg.web.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

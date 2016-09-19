@@ -1,4 +1,4 @@
-package com.cg.web.cxf.aop.advice;
+package com.cg.web.spring.aop.advice;
 
 import org.springframework.aop.MethodBeforeAdvice;
 

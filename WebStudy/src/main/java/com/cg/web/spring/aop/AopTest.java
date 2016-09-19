@@ -1,8 +1,6 @@
-package com.cg.web.cxf.aop;
+package com.cg.web.spring.aop;
 
-import com.cg.web.cxf.aop.service.IMyHelloService;
-import com.cg.web.cxf.aop.service.impl.MyHelloServiceImpl;
-import com.cg.web.cxf.aop.service.impl.PojoHelloService;
+import com.cg.web.spring.aop.service.impl.PojoHelloService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
