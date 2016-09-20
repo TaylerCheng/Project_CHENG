@@ -17,7 +17,8 @@
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
         <tk.mybatis.mapper>3.3.4</tk.mybatis.mapper>
         <junit.version>4.12</junit.version>
-        <jdbc.mysql.driver.version> 5.1.6</jdbc.mysql.driver.version>
+        <jdbc.mysql.driver.version>5.1.6</jdbc.mysql.driver.version>
+        <dubbo.version>2.5.3</dubbo.version>
     </properties>
 
     <dependencies>
@@ -32,6 +33,37 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
+        </dependency>
+
+        <!--阿里SOA框架-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.10.6.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.9</version>
         </dependency>
 
         <!--数据库连接池-->
@@ -77,9 +109,9 @@
         </dependency>
         <!-- Jetty is needed if you're not using the CXFServlet -->
         <!--<dependency>-->
-            <!--<groupId>org.apache.cxf</groupId>-->
-            <!--<artifactId>cxf-rt-transports-http-jetty</artifactId>-->
-            <!--<version>${cxf.version}</version>-->
+        <!--<groupId>org.apache.cxf</groupId>-->
+        <!--<artifactId>cxf-rt-transports-http-jetty</artifactId>-->
+        <!--<version>${cxf.version}</version>-->
         <!--</dependency>-->
 
         <!-- 日志 -->
@@ -177,10 +209,10 @@
                     </warSourceDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <!--<webResources>-->
-                        <!--<resource>-->
-                            <!--<directory>${basedir}/config/dev/</directory>-->
-                            <!--<targetPath>WEB-INF/classes</targetPath>-->
-                        <!--</resource>-->
+                    <!--<resource>-->
+                    <!--<directory>${basedir}/config/dev/</directory>-->
+                    <!--<targetPath>WEB-INF/classes</targetPath>-->
+                    <!--</resource>-->
                     <!--</webResources>-->
                 </configuration>
             </plugin>
