@@ -4,7 +4,7 @@ package com.cg.web.cxf.service;
  * Created by Cheng Guang on 2016/9/6.
  */
 
-import com.cg.web.cxf.pojo.User;
+import com.cg.web.pojo.User;
 
 import java.util.List;
 

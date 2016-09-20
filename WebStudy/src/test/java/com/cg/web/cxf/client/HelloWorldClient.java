@@ -1,7 +1,7 @@
 package com.cg.web.cxf.client;
 
 import com.cg.web.cxf.service.HelloWorld;
-import com.cg.web.cxf.pojo.User;
+import com.cg.web.pojo.User;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 /**
@@ -18,7 +18,7 @@ public class HelloWorldClient
 		HelloWorld hw = (HelloWorld) svr.create( );
 		User user = new User( );
 		user.setName( "Cheng" );
-		user.setDescription( "test" );
+		user.setSex( "test" );
 		System.out.println( hw.sayHiToUser( user ) );
 	}
 }
