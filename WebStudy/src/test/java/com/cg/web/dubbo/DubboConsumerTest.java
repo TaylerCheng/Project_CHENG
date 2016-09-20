@@ -15,13 +15,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class DubboConsumerTest {
 
     @Autowired
-    public CustomerService demoService ;
+    public CustomerService customerService;
 
     @Test
-    public void dubboTest(){
-        System.out.println(demoService.getClass());
-        String result = demoService.getName("Cheng");
-        System.out.println(result);
+    public void dubboTest() throws InterruptedException {
+        while (true) {
+            System.out.println(customerService.getClass());
+            String result = customerService.getName("Cheng");
+            System.out.println(result);
+            Thread.currentThread().sleep(1000);
+        }
     }
 
 }

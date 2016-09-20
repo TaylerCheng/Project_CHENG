@@ -9,7 +9,7 @@
     <import resource="classpath:spring/spring-aop.xml"/>
     <import resource="classpath:spring/spring-jaxws.xml"/>
     <import resource="classpath:spring/spring-db.xml"/>
-    <import resource="classpath:src/test/resources/spring-dubbo-consumer.xml"/>
+    <import resource="classpath:spring/spring-dubbo-consumer.xml"/>
     <import resource="classpath:spring/spring-dubbo-provider.xml"/>
 
     <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->

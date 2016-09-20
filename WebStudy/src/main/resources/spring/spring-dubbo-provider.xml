@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://code.alibabatech.com/schema/dubbo
-    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 使用spring自带的占位符替换功能 -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -18,12 +19,17 @@
         </property>
     </bean>
 
-    <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.cg.web.dubbo.service.CustomerService" ref="demoService" />
-    <!-- 具体的实现bean -->
-    <bean id="demoService" class="com.cg.web.dubbo.service.impl.CustomerServiceImpl" />
-    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
+
+    <!-- 设置应用名，用于计算依赖关系 -->
     <dubbo:application name="${dubbo.application.name}"  />
+
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service interface="com.cg.web.dubbo.service.CustomerService" ref="customerService" />
+    <!-- 具体的实现bean -->
+    <bean id="customerService" class="com.cg.web.dubbo.service.impl.CustomerServiceImpl" />
+
+
     <!-- 使用multicast广播注册中心暴露服务地址
     <dubbo:registry address="multicast://localhost:1234" />-->
     <!-- 使用zookeeper注册中心暴露服务地址 -->

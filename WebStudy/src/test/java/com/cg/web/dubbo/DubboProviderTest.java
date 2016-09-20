@@ -18,11 +18,10 @@ public class DubboProviderTest {
 
     @Test
     public void start() {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-dubbo-provider.xml");
-        context.start();
         System.out.println("Press any key to exit.");
         try {
             System.in.read();
+            System.exit(0);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
