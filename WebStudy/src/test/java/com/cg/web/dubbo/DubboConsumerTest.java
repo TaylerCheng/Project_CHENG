@@ -1,6 +1,7 @@
 package com.cg.web.dubbo;
 
 import com.cg.web.dubbo.service.CustomerService;
+import com.cg.web.dubbo.service.LoanService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,18 @@ public class DubboConsumerTest {
     @Autowired
     public CustomerService customerService;
 
+    @Autowired
+    public LoanService loanService;
+
     @Test
     public void dubboTest() throws InterruptedException {
         while (true) {
-            System.out.println(customerService.getClass());
+//            System.out.println(customerService.getClass());
             String result = customerService.getName("Cheng");
             System.out.println(result);
+
+            System.out.println(loanService.getApplCde());
+
             Thread.currentThread().sleep(1000);
         }
     }

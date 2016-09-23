@@ -18,7 +18,8 @@
         <tk.mybatis.mapper>3.3.4</tk.mybatis.mapper>
         <junit.version>4.12</junit.version>
         <jdbc.mysql.driver.version>5.1.6</jdbc.mysql.driver.version>
-        <dubbo.version>2.5.3</dubbo.version>
+        <!--最新版本是2.5.3，在阿里巴巴内部广泛使用的GA版本为：2.4.9，强烈推荐此版本！-->
+        <dubbo.version>2.4.9</dubbo.version>
     </properties>
 
     <dependencies>
