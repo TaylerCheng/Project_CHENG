@@ -9,7 +9,7 @@ import com.cg.dubbox.service.pojo.User;
 public class UserServiceImpl implements UserService {
 
     public User getUser(Long id) {
-        return new User(id);
+        return new User(id,"cheng");
     }
 }
 

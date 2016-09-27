@@ -16,14 +16,12 @@ public class DemoProvider {
     @Test
     public void start() {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-                "classpath:spring/spring-dubbo-provider.xml");
+                "classpath*:spring/spring-dubbox-provider.xml");
         context.start();
         System.out.println("服务已经启动...");
         try {
             System.in.read();
-            System.exit(0);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

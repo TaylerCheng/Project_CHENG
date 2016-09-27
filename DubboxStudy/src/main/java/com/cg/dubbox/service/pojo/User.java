@@ -1,26 +1,47 @@
 package com.cg.dubbox.service.pojo;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+
 /**
  * Created by Cheng Guang on 2016/9/6.
  */
-public class User {
-    private long id;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class User implements Serializable {
+
+    @NotNull
+    @Min(1L)
+    private Long id;
+
+    @JsonProperty("username")
+    @XmlElement(name = "username")
+    @NotNull
+    @Size(min = 6, max = 50)
     private String name;
-    private int age;
-    private String sex;
 
     public User() {
     }
 
-    public User(Long id) {
+    public User(Long id, String name) {
         this.id = id;
+        this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -32,19 +53,11 @@ public class User {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
+    @Override
+    public String toString() {
+        return "User (" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ')';
     }
 }

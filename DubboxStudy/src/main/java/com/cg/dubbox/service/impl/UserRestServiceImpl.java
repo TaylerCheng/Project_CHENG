@@ -1,6 +1,7 @@
 package com.cg.dubbox.service.impl;
 
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.alibaba.dubbo.rpc.protocol.rest.support.ContentType;
 import com.cg.dubbox.service.UserRestService;
 import com.cg.dubbox.service.UserService;
 import com.cg.dubbox.service.pojo.User;
@@ -8,10 +9,14 @@ import com.cg.dubbox.service.pojo.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Created by Cheng Guang on 2016/9/23.
  */
+@Path("users")
+@Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
+@Produces({ ContentType.APPLICATION_JSON_UTF_8, ContentType.TEXT_XML_UTF_8})
 public class UserRestServiceImpl implements UserRestService {
 
     private UserService userService;

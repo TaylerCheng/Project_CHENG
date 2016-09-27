@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!-- 使用spring自带的占位符替换功能 -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -17,33 +16,31 @@
         </property>
     </bean>
 
-    <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
-
     <!-- 设置应用名，用于计算依赖关系 -->
-    <dubbo:application name="${dubbo.application.name}" owner="programmer" organization="dubbox"/>
+    <dubbo:application name="demo-provider" owner="programmer" organization="dubbox"/>
 
-
-    <!-- 使用zookeeper注册中心暴露服务地址 -->
+    <!--使用zookeeper注册中心提供服务-->
     <dubbo:registry address="${zookeeper.address}"/>
-    <!-- 用dubbo协议在20880端口暴露服务 -->
-    <!--<dubbo:protocol name="dubbo" port="${dubbo.port}"/>-->
-
-    <!--###### Dubbox ##########-->
-    <!--Use tomcat server for restful api -->
-    <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
-                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
-    <dubbo:protocol name="dubbo" serialization="kryo" optimizer="com.alibaba.dubbo.demo.SerializationOptimizerImpl"/>
 
     <!--使用原有的dubbo rpc协议提供服务-->
-    <dubbo:service interface="com.cg.dubbox.service.UserService" ref="userService" protocol="dubbo"/>
-    <!--dubbox在dubbo的基础上封装了restful服务-->
-    <dubbo:service interface="com.cg.dubbox.service.UserRestService" ref="userRestService" protocol="rest"
-                   validation="true"/>
+    <dubbo:protocol name="dubbo" serialization="kryo"
+                    optimizer="com.cg.dubbox.service.utils.BaseSerializationOptimizerImpl" port="${dubbo.port}"/>
+    <!--dubbox在dubbo的基础上封装了restful服务，Use the tomcat server -->
+    <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
+                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
 
     <bean id="userService" class="com.cg.dubbox.service.impl.UserServiceImpl"/>
 
     <bean id="userRestService" class="com.cg.dubbox.service.impl.UserRestServiceImpl">
         <property name="userService" ref="userService"/>
     </bean>
+
+    <dubbo:service interface="com.cg.dubbox.service.UserService" ref="userService" protocol="dubbo"/>
+
+    <dubbo:service interface="com.cg.dubbox.service.UserRestService" ref="userRestService" protocol="rest"
+                   validation="true"/>
+
+     <!--自动扫描bean组件-->
+    <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
 
 </beans>
