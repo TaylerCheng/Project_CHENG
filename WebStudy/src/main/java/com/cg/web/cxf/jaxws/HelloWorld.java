@@ -1,4 +1,4 @@
-package com.cg.web.cxf.service;
+package com.cg.web.cxf.jaxws;
 
 /**
  * Created by Cheng Guang on 2016/9/6.

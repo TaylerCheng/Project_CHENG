@@ -43,7 +43,7 @@
     <!--&lt;!&ndash;定义代理的接口&ndash;&gt;-->
     <!--<property name="proxyInterfaces" >-->
     <!--<list>-->
-    <!--<value>com.cg.web.spring.aop.service.IMyHelloService</value>-->
+    <!--<value>com.cg.web.spring.aop.jaxws.IMyHelloService</value>-->
     <!--</list>-->
     <!--</property>-->
     <!--&lt;!&ndash;定义通知（拦截器）&ndash;&gt;-->

@@ -4,11 +4,12 @@
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-    <import resource="classpath:META-INF/cxf/cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
-    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+    <!--CXF3.0以上版本不需要写这个 -->
+    <!--<import resource="classpath:META-INF/cxf/cxf.xml"/>-->
+    <!--<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>-->
+    <!--<import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>-->
 
-    <!--将HelloWorldImpl发布为服务-->
-    <jaxws:endpoint id="helloWorld" implementor="com.cg.web.cxf.service.impl.HelloWorldImpl" address="/helloWorld"/>
+    <!--将HelloWorldImpl发布为SOAP服务-->
+    <jaxws:endpoint id="helloWorld" implementor="com.cg.web.cxf.jaxws.impl.HelloWorldImpl" address="/helloWorld"/>
 
 </beans>

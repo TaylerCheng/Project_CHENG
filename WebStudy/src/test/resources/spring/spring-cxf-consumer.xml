@@ -8,10 +8,10 @@
     <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-    <bean id="client" class="com.cg.web.cxf.service.HelloWorld" factory-bean="clientFactory" factory-method="create"/>
+    <bean id="client" class="com.cg.web.cxf.jaxws.HelloWorld" factory-bean="clientFactory" factory-method="create"/>
 
     <bean id="clientFactory" class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
-        <property name="serviceClass" value="com.cg.web.cxf.service.HelloWorld"/>
+        <property name="serviceClass" value="com.cg.web.cxf.jaxws.HelloWorld"/>
         <property name="address" value="http://localhost:8080/webstudy/webservice/helloWorld"/>
     </bean>
 
@@ -19,7 +19,7 @@
     <!--<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
 
     <!-- 该配置会自动扫描Spring组件注解 -->
-    <!--<context:component-scan base-package="com.zealfi.bdxiaodai.mgmt.service"/>-->
+    <!--<context:component-scan base-package="com.zealfi.bdxiaodai.mgmt.jaxws"/>-->
 
 
 </beans>

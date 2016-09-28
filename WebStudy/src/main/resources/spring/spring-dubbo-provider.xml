@@ -19,7 +19,7 @@
         </property>
     </bean>
 
-    <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
+    <!--<context:component-scan base-package="com.cg.web.dubbo.jaxws.impl"/>-->
 
     <!-- 设置应用名，用于计算依赖关系 -->
     <dubbo:application name="${dubbo.application.name}"  />

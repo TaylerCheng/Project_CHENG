@@ -1,10 +1,10 @@
-package com.cg.web.cxf.service.impl;
+package com.cg.web.cxf.jaxws.impl;
 
 /**
  * Created by Cheng Guang on 2016/9/6.
  */
 
-import com.cg.web.cxf.service.HelloWorld;
+import com.cg.web.cxf.jaxws.HelloWorld;
 import com.cg.web.pojo.User;
 
 import java.util.LinkedHashMap;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 import javax.jws.WebService;
 
-@WebService(endpointInterface = "com.cg.web.cxf.service.HelloWorld", serviceName = "helloWorld")
+@WebService(endpointInterface = "com.cg.web.cxf.jaxws.HelloWorld", serviceName = "helloWorld")
 public class HelloWorldImpl implements HelloWorld
 {
 
