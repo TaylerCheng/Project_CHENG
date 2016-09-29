@@ -1,149 +1,116 @@
-package com.cg.web.cxf.jaxrs;
+package com.cg.web.cxf.jaxrs.service.impl;
 
 import com.cg.web.cxf.jaxrs.model.Book;
 import com.cg.web.cxf.jaxrs.model.Product;
 import com.cg.web.cxf.jaxrs.model.User;
+import com.cg.web.cxf.jaxrs.service.MyService;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.Path;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
+
 /**
  * Created by Cheng Guang on 2016/9/28.
  */
 @Path("/")
-public class MyService {
+public class MyServiceImpl implements MyService {
 
-    private static final String XMLNS_NAMESPACE = "com.cg.web.cxf.jaxrs.MyService";
+    private static final String XMLNS_NAMESPACE = "com.cg.web.cxf.jaxrs.MyServiceImpl";
 
     final String ROOT_NODE = "root";
 
-    @GET
-    @Path("/json/hello")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Override
     public JAXBElement<String> getHelloWorldJSON() {
         JAXBElement<String> result = new JAXBElement<String>(new QName("",
                 ROOT_NODE), String.class, sayHelloWorld());
         return result;
     }
 
-    @GET
-    @Path("/xml/hello")
-    @Produces(MediaType.APPLICATION_XML)
+    @Override
     public JAXBElement<String> getHelloWorldXML() {
         JAXBElement<String> result = new JAXBElement<String>(new QName(
                 XMLNS_NAMESPACE, ROOT_NODE), String.class, sayHelloWorld());
         return result;
     }
 
-    @GET
-    @Path("/json/hi/{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public JAXBElement<String> getHelloToNameJSON(@PathParam("name") String name) {
+    @Override
+    public JAXBElement<String> getHelloToNameJSON( String name) {
         JAXBElement<String> result = new JAXBElement<String>(new QName("",
                 ROOT_NODE), String.class, sayHelloToName(name));
         return result;
     }
 
-    @GET
-    @Path("/xml/hi/{name}")
-    @Produces(MediaType.APPLICATION_XML)
-    public JAXBElement<String> getHelloToNameXML(@PathParam("name") String name) {
+    @Override
+    public JAXBElement<String> getHelloToNameXML(String name) {
         JAXBElement<String> result = new JAXBElement<String>(new QName(
                 XMLNS_NAMESPACE, ROOT_NODE), String.class, sayHelloToName(name));
         return result;
     }
 
-    @GET
-    @Path("/xml/user")
-    @Produces(MediaType.APPLICATION_XML)
+    @Override
     public User getUserInXML() {
         return getUser("unknown");
     }
 
-    @GET
-    @Path("/json/user")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Override
     public User getUserInJSON() {
         return getUser("unknown");
     }
 
-    @GET
-    @Path("/xml/userByName/{name}")
-    @Produces(MediaType.APPLICATION_XML)
-    public User getUserInXML(@PathParam("name") String username) {
+    @Override
+    public User getUserInXML(String username) {
         return getUser(username);
     }
 
-    @GET
-    @Path("/json/userByName/{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public User getUserInJSON(@PathParam("name") String username) {
+    @Override
+    public User getUserInJSON(String username) {
         return getUser(username);
     }
 
-    @GET
-    @Path("/xml/userByName2/{name}")
-    @Produces(MediaType.APPLICATION_XML)
-    public JAXBElement<User> getUserInXML2(@PathParam("name") String username) {
+    @Override
+    public JAXBElement<User> getUserInXML2(String username) {
         JAXBElement<User> result = new JAXBElement<User>(new QName(
                 XMLNS_NAMESPACE, ROOT_NODE), User.class, getUser(username));
         return result;
     }
 
-    @GET
-    @Path("/json/userByName2/{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public JAXBElement<User> getUserInJSON2(@PathParam("name") String username) {
+    @Override
+    public JAXBElement<User> getUserInJSON2(String username) {
         JAXBElement<User> result = new JAXBElement<User>(new QName("",
                 ROOT_NODE), User.class, getUser(username));
         return result;
     }
 
-    @GET
-    @Path("/xml/product/{name}")
-    @Produces(MediaType.APPLICATION_XML)
-    public Product getProductXML(@PathParam("name") Product product) {
+    @Override
+    public Product getProductXML(Product product) {
         return getProductFromServer(product);
     }
 
-    @GET
-    @Path("/xml/product2/{name}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Override
     public JAXBElement<Product> getProductXML2(
-            @PathParam("name") Product product) {
+            Product product) {
         JAXBElement<Product> result = new JAXBElement<Product>(new QName(
                 XMLNS_NAMESPACE, ROOT_NODE), Product.class,
                 getProductFromServer(product));
         return result;
     }
 
-    @GET
-    @Path("/xml/book/{ISBN}")
-    @Produces(MediaType.APPLICATION_XML)
-    public Book getBookXML(@PathParam("ISBN") Book book) {
+    @Override
+    public Book getBookXML(Book book) {
         return getBookFromServer(book);
     }
 
-    @GET
-    @Path("/json/book/{ISBN}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Book getBookJSON(@PathParam("ISBN") Book book) {
+    @Override
+    public Book getBookJSON(Book book) {
         return getBookFromServer(book);
     }
 
-    @POST
-    @Path("/json/add-book")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Override
     public Book addBookJSON(Book book) {
         return getBookFromServer(book);
     }
 
-    @POST
-    @Path("/xml/add-book")
-    @Produces(MediaType.APPLICATION_XML)
-    @Consumes(MediaType.APPLICATION_XML)
+    @Override
     public Book addBookXML(Book book) {
         return getBookFromServer(book);
     }

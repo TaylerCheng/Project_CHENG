@@ -14,7 +14,7 @@
     <jaxws:endpoint id="helloWorld" implementor="com.cg.web.cxf.jaxws.impl.HelloWorldImpl" address="/helloWorld"/>
 
     <!--将MyService发布为Restful服务-->
-    <bean id="myService" class="com.cg.web.cxf.jaxrs.MyService"/>
+    <bean id="myService" class="com.cg.web.cxf.jaxrs.service.impl.MyServiceImpl"/>
 
     <jaxrs:server id="restServiceContainer" address="/myService">
         <jaxrs:serviceBeans>
@@ -23,13 +23,15 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
         </jaxrs:providers>
+        <!--该服务接受的数据类型-->
         <jaxrs:extensionMappings>
             <entry key="json" value="application/json"/>
             <entry key="xml" value="application/xml"/>
         </jaxrs:extensionMappings>
-        <!--<jaxrs:languageMappings>-->
-            <!--<entry key="en" value="en-gb"/>-->
-        <!--</jaxrs:languageMappings>-->
+        <!--该服务接受的语言类型-->
+        <jaxrs:languageMappings>
+            <entry key="en" value="en-gb"/>
+        </jaxrs:languageMappings>
     </jaxrs:server>
 
 </beans>

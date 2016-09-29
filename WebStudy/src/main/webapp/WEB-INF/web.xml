@@ -55,7 +55,7 @@
         <!--<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>-->
         <!--<init-param>-->
             <!--<param-name>jaxrs.serviceClasses</param-name>-->
-            <!--<param-value>com.cg.web.cxf.jaxrs.MyService</param-value>-->
+            <!--<param-value>com.cg.web.cxf.jaxrs.MyServiceImpl</param-value>-->
         <!--</init-param>-->
         <!--<init-param>-->
             <!--<param-name>jaxrs.providers</param-name>-->
