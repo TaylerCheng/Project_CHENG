@@ -5,7 +5,7 @@
 
 
     <import resource="classpath:spring/spring-aop.xml"/>
-    <!--<import resource="classpath:spring/spring-jaxws.xml"/>-->
+    <import resource="classpath:spring/spring-cxf.xml"/>
     <import resource="classpath:spring/spring-db.xml"/>
     <!--<import resource="classpath:spring/spring-dubbo-consumer.xml"/>-->
     <!--<import resource="classpath:spring/spring-dubbo-provider.xml"/>-->
