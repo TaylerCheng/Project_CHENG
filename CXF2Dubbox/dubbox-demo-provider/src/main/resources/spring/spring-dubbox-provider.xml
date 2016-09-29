@@ -1,0 +1,42 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 使用spring自带的占位符替换功能 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName"
+                  value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 设置应用名，用于计算依赖关系 -->
+    <dubbo:application name="demo-provider" owner="programmer" organization="dubbox"/>
+
+    <!--使用zookeeper注册中心提供服务-->
+    <dubbo:registry address="${zookeeper.address}"/>
+
+    <!--使用原有的dubbo rpc协议提供服务-->
+    <dubbo:protocol name="dubbo" serialization="kryo"
+                    optimizer="com.cg.dubbox.provider.utils.BaseSerializationOptimizerImpl" port="${dubbo.port}"/>
+
+    <!--dubbox在dubbo的基础上封装了restful服务，Use the tomcat server -->
+    <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
+                    extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
+
+
+    <bean id="myService" class="com.cg.dubbox.provider.service.impl.MyServiceImpl"/>
+
+    <dubbo:service interface="com.cg.dubbox.api.service.MyService" ref="myService" protocol="rest"
+                   validation="true"/>
+
+     <!--自动扫描bean组件-->
+    <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
+
+</beans>

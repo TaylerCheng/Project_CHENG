@@ -4,7 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <import resource="classpath:spring/spring-dubbo-consumer.xml"/>
     <import resource="classpath:spring/spring-dubbox-provider.xml"/>
 
     <!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->
