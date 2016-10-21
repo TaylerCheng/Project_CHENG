@@ -12,7 +12,7 @@ import javax.xml.bind.JAXBElement;
 /**
  * Created by Cheng Guang on 2016/9/28.
  */
-@Path("/")
+@Path("/myservice")
 public interface MyService {
 
     @GET

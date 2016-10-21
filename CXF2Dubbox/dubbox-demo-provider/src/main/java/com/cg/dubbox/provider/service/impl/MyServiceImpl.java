@@ -12,7 +12,6 @@ import javax.xml.namespace.QName;
 /**
  * Created by Cheng Guang on 2016/9/28.
  */
-@Path("/")
 public class MyServiceImpl implements MyService {
 
     private static final String XMLNS_NAMESPACE = "com.cg.web.cxf.jaxrs.MyServiceImpl";

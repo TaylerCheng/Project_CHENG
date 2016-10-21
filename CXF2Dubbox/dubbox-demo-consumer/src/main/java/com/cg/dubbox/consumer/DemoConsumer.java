@@ -20,7 +20,7 @@ public class DemoConsumer {
         context.start();
         //使用dubbox框架，可以像调用本地服务一样调用远程程序
         MyService userService = context.getBean(MyService.class);
-        System.out.println("++++++++++++++++++++++++++ \n"+ userService.getUserInXML("Cheng").getPin());
+        System.out.println("结果-----------------: "+ userService.getUserInXML().getUsername());
 
 
         //测试Restful服务

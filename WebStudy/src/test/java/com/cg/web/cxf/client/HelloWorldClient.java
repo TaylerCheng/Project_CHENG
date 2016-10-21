@@ -48,6 +48,9 @@ public class HelloWorldClient {
         userList.add(user1);
         userList.add(user2);
 
+        /**
+         * 使用Cxf+Spring，可以像在本地一样调用远程方法
+         */
         String[] res = client.SayHiToUserList(userList);
         System.out.println(res[0]);
         System.out.println(res[1]);
