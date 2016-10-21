@@ -30,13 +30,15 @@
     <dubbo:protocol name="rest" port="8888" threads="500" contextpath="services" server="tomcat" accepts="500"
                     extension="com.alibaba.dubbo.rpc.protocol.rest.support.LoggingFilter"/>
 
-
+    <!--通过xml配置发布服务-->
     <bean id="myService" class="com.cg.dubbox.provider.service.impl.MyServiceImpl"/>
-
     <dubbo:service interface="com.cg.dubbox.api.service.MyService" ref="myService" protocol="rest"
                    validation="true"/>
 
-     <!--自动扫描bean组件-->
+    <!--通过注解的方式扫描dubbox的@Service注解-->
+    <dubbo:annotation package="com.cg.dubbox.provider.service.impl" />
+
+    <!--自动扫描bean组件-->
     <!--<context:component-scan base-package="com.cg.web.dubbo.service.impl"/>-->
 
 </beans>
