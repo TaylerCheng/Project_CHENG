@@ -16,7 +16,6 @@ public class ListGroup extends ConnectionWatcher {
 				System.out.println(child);
 				byte[] data = zk.getData(groupName+"/"+child, this, null);
 				System.out.println(data);
-				
 			}
 		} catch (KeeperException e) {
 			// TODO Auto-generated catch block
@@ -29,8 +28,8 @@ public class ListGroup extends ConnectionWatcher {
 
 	public static void main(String[] args) throws Exception {
 		ListGroup listGroup = new ListGroup();
-		listGroup.connect("172.16.5.103:3181");
-		listGroup.list("/hive_zookeeper_namespace");
+		listGroup.connect("master.hadoop:2181");
+		listGroup.list("/dubbo");
 		listGroup.close();
 	}
 }

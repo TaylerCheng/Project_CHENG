@@ -8,6 +8,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mahout.version>0.9</mahout.version>
         <hadoop.version>2.6.0</hadoop.version>
@@ -15,6 +16,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-core</artifactId>
@@ -31,23 +37,23 @@
             </exclusions>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.apache.mahout</groupId>-->
-            <!--<artifactId>mahout-integration</artifactId>-->
-            <!--<version>${mahout.version}</version>-->
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.mortbay.jetty</groupId>-->
-                    <!--<artifactId>jetty</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.cassandra</groupId>-->
-                    <!--<artifactId>cassandra-all</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>me.prettyprint</groupId>-->
-                    <!--<artifactId>hector-core</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+        <!--<groupId>org.apache.mahout</groupId>-->
+        <!--<artifactId>mahout-integration</artifactId>-->
+        <!--<version>${mahout.version}</version>-->
+        <!--<exclusions>-->
+        <!--<exclusion>-->
+        <!--<groupId>org.mortbay.jetty</groupId>-->
+        <!--<artifactId>jetty</artifactId>-->
+        <!--</exclusion>-->
+        <!--<exclusion>-->
+        <!--<groupId>org.apache.cassandra</groupId>-->
+        <!--<artifactId>cassandra-all</artifactId>-->
+        <!--</exclusion>-->
+        <!--<exclusion>-->
+        <!--<groupId>me.prettyprint</groupId>-->
+        <!--<artifactId>hector-core</artifactId>-->
+        <!--</exclusion>-->
+        <!--</exclusions>-->
         <!--</dependency>-->
         <dependency>
             <groupId>junit</groupId>
@@ -113,6 +119,12 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-client</artifactId>
             <version>${hbase.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
