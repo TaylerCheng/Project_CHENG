@@ -206,7 +206,11 @@
             <artifactId>aopalliance</artifactId>
             <version>1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.3.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -251,12 +255,17 @@
                 <version>2.2</version>
                 <configuration>
                     <url>http://127.0.0.1:8080/WebStudy</url>
-                    <server>tomcat8</server>
-                    <username>tomcat8</username>
-                    <password>Fengji-kyloan</password>
                     <path>/${project.build.finalName}</path>
-                    <!-- war文件路径缺省情况下指向target -->
-                    <!--<warFile>${basedir}/target/${project.build.finalName}.war</warFile> -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <configurationFile>src/main/resources/mybatis/generatorConfig.xml</configurationFile>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
                 </configuration>
             </plugin>
         </plugins>
