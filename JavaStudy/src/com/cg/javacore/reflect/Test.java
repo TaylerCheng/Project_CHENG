@@ -19,7 +19,8 @@ public class Test {
 //		fields[1].setAccessible(true);
 //		System.out.println(fields[1].get(gmv));
 
-	    //Field fieldx = c2.getField("str");//必须是x或者y		
+	    //Field fieldx = c2.getField("str");
+		//瀵逛簬闈欐�佸彉閲忥紝鍙互浼犲叆null
 		//System.out.println(fieldx.get(gmv));
 		
 //		System.out.println(c.getConstructor(String.class));

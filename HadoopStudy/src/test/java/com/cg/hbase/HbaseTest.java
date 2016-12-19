@@ -46,6 +46,34 @@ public class HbaseTest {
     }
 
     @Test
+    public void getResult() throws IOException {
+        String tableName = "blog_user";
+        String rowKey = "www.aboutyun.com";
+        String[] columns = new String[] { "user_Name", "user_Password", "user_Sex" };
+
+        HTable table = new HTable(conf, Bytes.toBytes(tableName));
+        //        Connection connection = ConnectionFactory.createConnection(conf);
+        //        Table table = connection.getTable(TableName.valueOf(tableName));
+        Get get = new Get(Bytes.toBytes(rowKey));
+        Result result = table.get(get);
+
+        String[] value = new String[columns.length];
+        for (KeyValue kv : result.list()) {
+            System.out.print(Bytes.toString(kv.getFamily())+":" + Bytes.toString(kv.getQualifier()) + " = ");
+            System.out.println(Bytes.toString(kv.getValue()));
+
+            //            for (int i = 0; i < columns.length; i++) {
+            //                System.out.println("Qualifier:" + Bytes.toString(kv.getQualifier()));
+            //                System.out.println(columns[i]);
+            //                if (Bytes.toString(kv.getQualifier()).equals(columns[i])) {
+            //                    value[i] = Bytes.toString(kv.getValue());
+            //                    break;
+            //                }
+            //            }
+        }
+    }
+
+    @Test
     public void getResultScan() throws IOException {
         String tableName = "blog_user";
         String start_rowkey = "www.aboutyun.com";
@@ -111,33 +139,5 @@ public class HbaseTest {
     //            e.printStackTrace();
     //        }
     //    }
-
-    @Test
-    public void getResult() throws IOException {
-        String tableName = "blog_user";
-        String rowKey = "www.aboutyun.com";
-        String[] columns = new String[] { "user_Name", "user_Password", "user_Sex" };
-
-        HTable table = new HTable(conf, Bytes.toBytes(tableName));
-        //        Connection connection = ConnectionFactory.createConnection(conf);
-        //        Table table = connection.getTable(TableName.valueOf(tableName));
-        Get get = new Get(Bytes.toBytes(rowKey));
-        Result result = table.get(get);
-
-        String[] value = new String[columns.length];
-        for (KeyValue kv : result.list()) {
-            System.out.print("Qualifier:" + Bytes.toString(kv.getQualifier()) + " = ");
-            System.out.println(Bytes.toString(kv.getValue()));
-
-            //            for (int i = 0; i < columns.length; i++) {
-            //                System.out.println("Qualifier:" + Bytes.toString(kv.getQualifier()));
-            //                System.out.println(columns[i]);
-            //                if (Bytes.toString(kv.getQualifier()).equals(columns[i])) {
-            //                    value[i] = Bytes.toString(kv.getValue());
-            //                    break;
-            //                }
-            //            }
-        }
-    }
 
 }

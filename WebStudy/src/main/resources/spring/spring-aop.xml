@@ -6,21 +6,17 @@
     <!--前置通知类-->
     <bean id="myMethodBeforeAdvice" class="com.cg.web.spring.aop.advice.MyMethodBeforeAdvice"/>
 
-    <!--被代理的对象-->
-    <bean id="iMyHelloService" class="com.cg.web.spring.aop.service.impl.MyHelloServiceImpl"/>
-    <bean id="pojoHelloService" class="com.cg.web.spring.aop.service.impl.PojoHelloService"/>
-
     <aop:config>
-         <!--全局切点-->
+        <!--全局切点-->
         <aop:pointcut id="sayHello"
-                      expression="execution(* com.cg.web.spring.aop.service.impl.PojoHelloService.sayHello(..))"/>
+                      expression="execution(* com.cg.web.spring.aop.service.IMyHelloService.sayHello())"/>
 
         <aop:aspect ref="myMethodBeforeAdvice">
-            <!--切面的切点-->
+            <!--切面内的切点-->
             <aop:pointcut id="sayHelloToSomeBody"
-                          expression="execution(* com.cg.web.spring.aop.service.impl.PojoHelloService.sayHelloToSomeBody(String)) and args(name)"/>
-
-            <aop:before pointcut-ref="sayHello" method="beforeHello" />
+                          expression="execution(* com.cg.web.spring.aop.service.IMyHelloService.sayHello(..)) and args(..,name)
+                          or execution(* com.cg.web.spring.aop.service.impl.PojoHelloService.sayHelloToSomeBody(String)) and args(name) "/>
+            <aop:before pointcut-ref="sayHello" method="beforeHello"/>
             <!--可传参数进去-->
             <aop:before pointcut-ref="sayHelloToSomeBody" method="beforeName" arg-names="name"/>
         </aop:aspect>

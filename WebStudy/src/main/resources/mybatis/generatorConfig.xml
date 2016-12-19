@@ -19,21 +19,23 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!--生成Model类存放位置-->
-        <javaModelGenerator targetPackage="com.cg.web.spring.dao.mybatis.pojo" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.niuwa.p2p.integration.yihuanji2.entity" targetProject="src/main/java">
+            <property name="" value=""/>
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!--生成映射文件存放位置-->
-        <sqlMapGenerator targetPackage="com.cg.web.spring.dao.mybatis.xml" targetProject="src/main/java">
+        <sqlMapGenerator targetPackage="com.niuwa.p2p.integration.yihuanji2.mapper.xml" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.cg.web.spring.dao.mybatis.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.niuwa.p2p.integration.yihuanji2.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
-        <table tableName="user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <!--<table tableName="user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="user_info" domainObjectName="UserInfo" enableCountByExample="false"></table>-->
         <!--<table tableName="course_user_info" domainObjectName="CourseUserInfo" enableSelectByExample="true"></table>-->
+        <table tableName="yhj_cust_shop_info" domainObjectName="YhjCustShopInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"/>
     </context>
 </generatorConfiguration>

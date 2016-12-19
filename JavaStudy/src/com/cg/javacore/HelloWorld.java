@@ -1,10 +1,7 @@
 
 package com.cg.javacore;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public abstract class HelloWorld
 {
@@ -38,6 +35,41 @@ public abstract class HelloWorld
 	public static void main( String[] args )
 	{
 
+//		Calendar calendar = Calendar.getInstance();
+//		System.out.println(calendar.getClass());
+//		calendar.set(Calendar.DATE, calendar.getMinimum(Calendar.DAY_OF_MONTH));
+//		calendar.set(Calendar.HOUR_OF_DAY, 0);
+//		calendar.set(Calendar.MINUTE, 0);
+//		calendar.set(Calendar.SECOND, 0);
+//		calendar.set(Calendar.MILLISECOND, 0);
+//
+//		Date endTime = calendar.getTime();
+//		calendar.add(Calendar.MONTH, -1);
+//
+//		Date beginTime = calendar.getTime();
+//
+//		System.out.println(endTime);
+//		System.out.println(beginTime);
+
+		//把当前时间调整到当天0点0分0秒
+//		Calendar date = Calendar.getInstance();
+//		date.set(Calendar.HOUR_OF_DAY, 24);
+//		date.set(Calendar.MINUTE, 0);
+//		date.set(Calendar.SECOND, 0);
+//
+//		Date endDay = date.getTime();
+//		System.out.println(endDay);
+//
+//
+//		//将时间设置为[dayNum-1]天前的0点0分0秒
+//		date.add(Calendar.DAY_OF_MONTH, -3);
+//		Date queryDay = date.getTime();
+//		System.out.println(queryDay);
+//		Boolean b = null;
+//		if (b==null||b){
+//			System.out.println(b);
+//		}
+
 //		BTNode nodeO = new BTNode( 'O', null, null );
 //		BTNode nodeR = new BTNode( 'R', null, null );
 //		BTNode nodeT = new BTNode( 'T', null, null );
@@ -48,8 +80,14 @@ public abstract class HelloWorld
 //
 //		nodeA.preOrder( );
 
-		int[] array = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-		System.out.println( "3在数组中的位置:" + search( array, 3 ) );
+//		int[] array = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//		System.out.println( "3在数组中的位置:" + search( array, 3 ) );
+
+		int a =2;
+		int b =6;
+		double r = a/b;
+		System.out.println(r);
+
 	}
 
 	private static int search( int[] array, int target )
