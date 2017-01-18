@@ -34,7 +34,6 @@ public abstract class HelloWorld
 
 	public static void main( String[] args )
 	{
-
 //		Calendar calendar = Calendar.getInstance();
 //		System.out.println(calendar.getClass());
 //		calendar.set(Calendar.DATE, calendar.getMinimum(Calendar.DAY_OF_MONTH));
@@ -83,10 +82,11 @@ public abstract class HelloWorld
 //		int[] array = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 //		System.out.println( "3在数组中的位置:" + search( array, 3 ) );
 
-		int a =2;
-		int b =6;
-		double r = a/b;
-		System.out.println(r);
+//		int a =2;
+//		int b =6;
+//		double r = a/b;
+//		System.out.println(r);
+
 
 	}
 
