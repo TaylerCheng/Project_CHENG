@@ -36,7 +36,7 @@ public class WordCount {
         // Section 1 init job
         Job job = null;
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
-            String classpath = otherArgs[1];
+            String classpath = otherArgs[0];
             conf.set("mapred.reduce.tasks", "2");
             job = YarnJobUtil.initJob(conf, JOB_NAME, classpath);
         } else {
@@ -45,11 +45,10 @@ public class WordCount {
         }
 
         // Section 2 job config
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
+
         job.setInputFormatClass(TextInputFormat.class);
         TextInputFormat.addInputPath(job, new Path(otherArgs[1]));
         Path outputPath = new Path(otherArgs[2]);
@@ -58,6 +57,8 @@ public class WordCount {
             fs.delete(outputPath,true);
         }
         job.setOutputFormatClass(TextOutputFormat.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
         TextOutputFormat.setOutputPath(job, outputPath);
 
         // Section 3 excute job

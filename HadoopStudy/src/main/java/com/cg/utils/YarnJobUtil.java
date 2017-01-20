@@ -1,7 +1,6 @@
 package com.cg.utils;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.log4j.Logger;
 
@@ -19,7 +18,7 @@ import java.util.jar.Manifest;
 
 /**
  * Windows开发环境提交作业到Yarn集群工具类
- *
+ * <p>
  * Created by Cheng Guang on 2016/9/14.
  */
 public class YarnJobUtil {
@@ -36,7 +35,7 @@ public class YarnJobUtil {
             ClassLoader classLoader = getClassLoader();
             Thread.currentThread().setContextClassLoader(classLoader);
             job = Job.getInstance(conf, jobName);
-            ((JobConf) job.getConfiguration()).setJar(jarFile.toString());
+            job.setJar(jarFile.toString());
         } catch (IOException e) {
             logger.info("Init job on yarn failed.", e);
             System.exit(0);
