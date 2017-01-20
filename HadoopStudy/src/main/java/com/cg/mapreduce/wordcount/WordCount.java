@@ -48,6 +48,7 @@ public class WordCount {
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
+        job.setPartitionerClass(MyPartitioner.class);
 
         job.setInputFormatClass(TextInputFormat.class);
         TextInputFormat.addInputPath(job, new Path(otherArgs[1]));
