@@ -6,11 +6,11 @@ import java.util.List;
   
 public class TreeNode implements Comparable<TreeNode>,Serializable {
   
-    private String name; // ½ÚµãÃû³Æ
-    private int count; // ¼ÆÊı
-    private TreeNode parent; // ¸¸½Úµã
-    private List<TreeNode> children; // ×Ó½Úµã
-    private TreeNode nextHomonym; // ÏÂÒ»¸öÍ¬Ãû½Úµã
+    private String name; // èŠ‚ç‚¹åç§°
+    private int count; // è®¡æ•°
+    private TreeNode parent; // çˆ¶èŠ‚ç‚¹
+    private List<TreeNode> children; // å­èŠ‚ç‚¹
+    private TreeNode nextHomonym; // ä¸‹ä¸€ä¸ªåŒåèŠ‚ç‚¹
   
     public TreeNode() {
   
@@ -106,7 +106,7 @@ public class TreeNode implements Comparable<TreeNode>,Serializable {
     public int compareTo(TreeNode arg0) {
         // TODO Auto-generated method stub
         int count0 = arg0.getCount();
-        // ¸úÄ¬ÈÏµÄ±È½Ï´óĞ¡Ïà·´£¬µ¼ÖÂµ÷ÓÃArrays.sort()Ê±ÊÇ°´½µĞòÅÅÁĞ
+        // è·Ÿé»˜è®¤çš„æ¯”è¾ƒå¤§å°ç›¸åï¼Œå¯¼è‡´è°ƒç”¨Arrays.sort()æ—¶æ˜¯æŒ‰é™åºæ’åˆ—
         return count0 - this.count;
     }
 }

@@ -42,7 +42,7 @@ public final class FPGrowthDriver extends AbstractJob {
 		ToolRunner.run(new Configuration(), new FPGrowthDriver(), args);
 //
 //		long endTime = System.currentTimeMillis();
-//		System.out.println("¹²ÓÃÊ±£º " + (endTime - startTime) + "ms");
+//		System.out.println("å…±ç”¨æ—¶ï¼š " + (endTime - startTime) + "ms");
 		System.out.println(FpGrow.count);
 	}
 

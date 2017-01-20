@@ -27,13 +27,13 @@ public class CombineSmallfileRecordReader extends RecordReader {
 	public CombineSmallfileRecordReader(CombineFileSplit combineFileSplit, TaskAttemptContext context, Integer index) throws IOException {
 		super();
 		this.combineFileSplit = combineFileSplit;
-		this.currentIndex = index; // 当前要处理的小文件Block在CombineFileSplit中的索引
+		this.currentIndex = index; // 褰撳墠瑕佸鐞嗙殑灏忔枃浠禕lock鍦–ombineFileSplit涓殑绱㈠紩
 	}
 
 	@Override
 	public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
 		this.combineFileSplit = (CombineFileSplit) split;
-		// 处理CombineFileSplit中的一个小文件Block，因为使用LineRecordReader，需要构造一个FileSplit对象，然后才能够读取数据
+		// 澶勭悊CombineFileSplit涓殑涓�涓皬鏂囦欢Block锛屽洜涓轰娇鐢↙ineRecordReader锛岄渶瑕佹瀯閫犱竴涓狥ileSplit瀵硅薄锛岀劧鍚庢墠鑳藉璇诲彇鏁版嵁
 		FileSplit fileSplit = new FileSplit(combineFileSplit.getPath(currentIndex), combineFileSplit.getOffset(currentIndex), combineFileSplit.getLength(currentIndex), combineFileSplit.getLocations());
 		lineRecordReader.initialize(fileSplit, context);
 

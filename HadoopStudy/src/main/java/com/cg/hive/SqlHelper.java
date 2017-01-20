@@ -16,7 +16,7 @@ public class SqlHelper {
 	private static PreparedStatement ps = null;
 	private static ResultSet rs = null;
 
-	// hiveserver (ÀÏ°æ±¾£¬°²È«ĞÔºÍ²¢·¢ĞÔ½Ï²î)
+	// hiveserver (è€ç‰ˆæœ¬ï¼Œå®‰å…¨æ€§å’Œå¹¶å‘æ€§è¾ƒå·®)
 	// private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 	private static String dbname = "org.apache.hive.jdbc.HiveDriver";
 	private static String url = "jdbc:hive2://172.16.24.111:10000/";

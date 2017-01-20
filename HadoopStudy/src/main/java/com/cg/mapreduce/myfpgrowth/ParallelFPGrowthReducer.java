@@ -87,21 +87,21 @@ public final class ParallelFPGrowthReducer extends
 		for (ArrayList<String> record : values) {
 			trans.add(record);
 		}
-		// ¹¹½¨FP-Tree
+		// æ„å»ºFP-Tree
 		TreeNode treeRoot = FpGrow.buildFPTree(trans, fList);
-		// ÕÒµ½ÏîÍ·±íµÄÃ¿Ò»ÏîµÄÌõ¼şÄ£Ê½»ù£¬½øÈëµİ¹éµü´ú
+		// æ‰¾åˆ°é¡¹å¤´è¡¨çš„æ¯ä¸€é¡¹çš„æ¡ä»¶æ¨¡å¼åŸºï¼Œè¿›å…¥é€’å½’è¿­ä»£
 		for (TreeNode header : localFList) {
-			// ºó×ºÄ£Ê½Ôö¼ÓÒ»Ïî
+			// åç¼€æ¨¡å¼å¢åŠ ä¸€é¡¹
 			List<String> postPattern = new LinkedList<String>();
 			postPattern.add(header.getName());
-			// Ñ°ÕÒheaderµÄÌõ¼şÄ£Ê½»ùCPB£¬·ÅÈënewTransRecordsÖĞ
+			// å¯»æ‰¾headerçš„æ¡ä»¶æ¨¡å¼åŸºCPBï¼Œæ”¾å…¥newTransRecordsä¸­
 			List<List<String>> transRecords = new LinkedList<List<String>>();
 			TreeNode backnode = header.getNextHomonym();
 			while (backnode != null) {
 				int counter = backnode.getCount();
 				List<String> prenodes = new ArrayList<String>();
 				TreeNode parent = backnode;
-				// ±éÀúbacknodeµÄ×æÏÈ½Úµã£¬·Åµ½prenodesÖĞ
+				// éå†backnodeçš„ç¥–å…ˆèŠ‚ç‚¹ï¼Œæ”¾åˆ°prenodesä¸­
 				while ((parent = parent.getParent()).getName() != null) {
 					prenodes.add(parent.getName());
 				}
@@ -111,18 +111,18 @@ public final class ParallelFPGrowthReducer extends
 				backnode = backnode.getNextHomonym();
 			}
 			FpGrow.setMinSuport(minSupport);
-			// µİ¹éµü´ú
+			// é€’å½’è¿­ä»£
 			FpGrow.fpgrowth(transRecords, postPattern);
 		}
 
-		// // ³õÊ¼»¯±¾µØÍ·±íÖĞÃ¿Ò»ÏîµÄÌõ¼şÄ£Ê½»ù
+		// // åˆå§‹åŒ–æœ¬åœ°å¤´è¡¨ä¸­æ¯ä¸€é¡¹çš„æ¡ä»¶æ¨¡å¼åŸº
 		// HashMap<String, LinkedList<List<String>>> condiTransMap = new
 		// HashMap<String, LinkedList<List<String>>>();
 		// for (TreeNode node : localFList) {
 		// condiTransMap.put(node.getName(), new LinkedList<List<String>>());
 		// }
 		//
-		// // ½«Ã¿Ìõ¼ÇÂ¼²åÈëµ½ÏàÓ¦µÄÌõ¼şÄ£Ê½»ùÖĞ
+		// // å°†æ¯æ¡è®°å½•æ’å…¥åˆ°ç›¸åº”çš„æ¡ä»¶æ¨¡å¼åŸºä¸­
 		// for (List<String> record : values) {
 		// System.out.println(record);
 		// String postNode = record.get(record.size() - 1);
@@ -135,7 +135,7 @@ public final class ParallelFPGrowthReducer extends
 		// }
 		// }
 		//
-		// // Éú³ÉÃ¿¸öÄ£Ê½µÄÌõ¼şFP-tree
+		// // ç”Ÿæˆæ¯ä¸ªæ¨¡å¼çš„æ¡ä»¶FP-tree
 		// Iterator iter = condiTransMap.entrySet().iterator();
 		// while (iter.hasNext()) {
 		// Map.Entry entry = (Map.Entry) iter.next();

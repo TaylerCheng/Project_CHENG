@@ -31,7 +31,7 @@ public class ConnectionWatcher implements Watcher {
 			connectedSignal.countDown();
 		}
 		if (event.getType()==EventType.NodeDataChanged) {
-			System.out.println("数据改变");
+			System.out.println("鏁版嵁鏀瑰彉");
 		}
 	}
 

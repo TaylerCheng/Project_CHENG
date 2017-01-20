@@ -38,6 +38,7 @@ public class WordCount {
         Job job = null;
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
             String outPutPath = "E:\\gitspace\\Project_CHENG\\HadoopStudy\\target\\classes";
+            conf.set("mapred.reduce.tasks", "2");
             job = YarnJobUtil.initJob(conf, outPutPath);
             if (job == null) {
                 logger.error("yarn-mode init failed!");

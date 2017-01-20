@@ -21,18 +21,18 @@ public class FpGrow {
 		minSuport = value;
 	}
 
-	// FP-GrowthËã·¨
+	// FP-Growthç®—æ³•
 	public static void fpgrowth(List<List<String>> transRecords,
 			List<String> postPattern) {
-		// ¹¹½¨ÏîÍ·±í£¬Í¬Ê±Ò²ÊÇÆµ·±1Ïî¼¯
+		// æ„å»ºé¡¹å¤´è¡¨ï¼ŒåŒæ—¶ä¹Ÿæ˜¯é¢‘ç¹1é¡¹é›†
 		ArrayList<TreeNode> HeaderTable = buildHeaderTable(transRecords);
-		// ¹¹½¨FP-Tree
+		// æ„å»ºFP-Tree
 		TreeNode treeRoot = buildFPTree(transRecords, HeaderTable);
-		// Èç¹ûFP-TreeÎª¿ÕÔò·µ»Ø
+		// å¦‚æœFP-Treeä¸ºç©ºåˆ™è¿”å›
 		if (treeRoot.getChildren() == null
 				|| treeRoot.getChildren().size() == 0)
 			return;
-		// Êä³öÏîÍ·±íµÄÃ¿Ò»Ïî+postPattern
+		// è¾“å‡ºé¡¹å¤´è¡¨çš„æ¯ä¸€é¡¹+postPattern
 		for (TreeNode header : HeaderTable) {
 			count++;
 			System.out.print(header.getCount() + "times" + "\t"
@@ -41,21 +41,21 @@ public class FpGrow {
 				System.out.print("\t" + ele);
 			System.out.println();
 		}
-		// ÕÒµ½ÏîÍ·±íµÄÃ¿Ò»ÏîµÄÌõ¼şÄ£Ê½»ù£¬½øÈëµİ¹éµü´ú
+		// æ‰¾åˆ°é¡¹å¤´è¡¨çš„æ¯ä¸€é¡¹çš„æ¡ä»¶æ¨¡å¼åŸºï¼Œè¿›å…¥é€’å½’è¿­ä»£
 		for (TreeNode header : HeaderTable) {
-			// ºó×ºÄ£Ê½Ôö¼ÓÒ»Ïî
+			// åç¼€æ¨¡å¼å¢åŠ ä¸€é¡¹
 			List<String> newPostPattern = new LinkedList<String>();
 			newPostPattern.add(header.getName());
 			if (postPattern != null)
 				newPostPattern.addAll(postPattern);
-			// Ñ°ÕÒheaderµÄÌõ¼şÄ£Ê½»ùCPB£¬·ÅÈënewTransRecordsÖĞ
+			// å¯»æ‰¾headerçš„æ¡ä»¶æ¨¡å¼åŸºCPBï¼Œæ”¾å…¥newTransRecordsä¸­
 			List<List<String>> newTransRecords = new LinkedList<List<String>>();
 			TreeNode backnode = header.getNextHomonym();
 			while (backnode != null) {
 				int counter = backnode.getCount();
 				List<String> prenodes = new ArrayList<String>();
 				TreeNode parent = backnode;
-				// ±éÀúbacknodeµÄ×æÏÈ½Úµã£¬·Åµ½prenodesÖĞ
+				// éå†backnodeçš„ç¥–å…ˆèŠ‚ç‚¹ï¼Œæ”¾åˆ°prenodesä¸­
 				while ((parent = parent.getParent()).getName() != null) {
 					prenodes.add(parent.getName());
 				}
@@ -64,19 +64,19 @@ public class FpGrow {
 				}
 				backnode = backnode.getNextHomonym();
 			}
-			// µİ¹éµü´ú
+			// é€’å½’è¿­ä»£
 			fpgrowth(newTransRecords, newPostPattern);
 		}
 	}
 
-	// ¹¹½¨ÏîÍ·±í£¬Í¬Ê±Ò²ÊÇÆµ·±1Ïî¼¯
+	// æ„å»ºé¡¹å¤´è¡¨ï¼ŒåŒæ—¶ä¹Ÿæ˜¯é¢‘ç¹1é¡¹é›†
 	public static ArrayList<TreeNode> buildHeaderTable(
 			List<List<String>> transRecords) {
 		ArrayList<TreeNode> F1 = null;
 		if (transRecords.size() > 0) {
 			F1 = new ArrayList<TreeNode>();
 			Map<String, TreeNode> map = new HashMap<String, TreeNode>();
-			// ¼ÆËãÊÂÎñÊı¾İ¿âÖĞ¸÷ÏîµÄÖ§³Ö¶È
+			// è®¡ç®—äº‹åŠ¡æ•°æ®åº“ä¸­å„é¡¹çš„æ”¯æŒåº¦
 			for (List<String> record : transRecords) {
 				for (String item : record) {
 					if (!map.keySet().contains(item)) {
@@ -89,7 +89,7 @@ public class FpGrow {
 				}
 			}
 
-			// °ÑÖ§³Ö¶È´óÓÚ£¨»òµÈÓÚ£©minSupµÄÏî¼ÓÈëµ½F1ÖĞ
+			// æŠŠæ”¯æŒåº¦å¤§äºï¼ˆæˆ–ç­‰äºï¼‰minSupçš„é¡¹åŠ å…¥åˆ°F1ä¸­
 			Set<String> names = map.keySet();
 			for (String name : names) {
 				TreeNode tnode = map.get(name);
@@ -104,10 +104,10 @@ public class FpGrow {
 		}
 	}
 
-	// ¹¹½¨FP-Tree
+	// æ„å»ºFP-Tree
 	public static TreeNode buildFPTree(List<List<String>> transRecords,
 			ArrayList<TreeNode> F1) {
-		TreeNode root = new TreeNode(); // ´´½¨Ê÷µÄ¸ù½Úµã
+		TreeNode root = new TreeNode(); // åˆ›å»ºæ ‘çš„æ ¹èŠ‚ç‚¹
 		for (List<String> transRecord : transRecords) {
 			LinkedList<String> record = sortByF1(transRecord, F1);
 			TreeNode subTreeRoot = root;
@@ -125,12 +125,12 @@ public class FpGrow {
 		return root;
 	}
 
-	// °Ñ½»Ò×¼ÇÂ¼°´ÏîµÄÆµ·±³ÌĞò½µĞòÅÅÁĞ
+	// æŠŠäº¤æ˜“è®°å½•æŒ‰é¡¹çš„é¢‘ç¹ç¨‹åºé™åºæ’åˆ—
 	public static LinkedList<String> sortByF1(List<String> transRecord,
 			ArrayList<TreeNode> F1) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for (String item : transRecord) {
-			// ÓÉÓÚF1ÒÑ¾­ÊÇ°´½µĞòÅÅÁĞµÄ£¬
+			// ç”±äºF1å·²ç»æ˜¯æŒ‰é™åºæ’åˆ—çš„ï¼Œ
 			for (int i = 0; i < F1.size(); i++) {
 				TreeNode tnode = F1.get(i);
 				if (tnode.getName().equals(item)) {
@@ -144,7 +144,7 @@ public class FpGrow {
 			@Override
 			public int compare(Entry<String, Integer> arg0,
 					Entry<String, Integer> arg1) {
-				// ½µĞòÅÅÁĞ
+				// é™åºæ’åˆ—
 				return arg0.getValue() - arg1.getValue();
 			}
 		});
@@ -155,7 +155,7 @@ public class FpGrow {
 		return rest;
 	}
 
-	// °Ñrecord×÷ÎªancestorµÄºó´ú²åÈëÊ÷ÖĞ
+	// æŠŠrecordä½œä¸ºancestorçš„åä»£æ’å…¥æ ‘ä¸­
 	public static void addNodes(TreeNode ancestor, LinkedList<String> record,
 			ArrayList<TreeNode> F1) {
 		if (record.size() > 0) {

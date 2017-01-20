@@ -51,4 +51,11 @@ public class HelloWorldTest {
         }
     }
 
+    @Test
+    public void test004() throws Exception {
+        Long nullLong = null;
+        long l = nullLong;
+        System.out.println(l);
+    }
+
 }

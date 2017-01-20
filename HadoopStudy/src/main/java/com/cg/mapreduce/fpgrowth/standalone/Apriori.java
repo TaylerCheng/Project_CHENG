@@ -23,12 +23,12 @@ public class Apriori {
 	  long startTime = System.currentTimeMillis();
 	  Apriori apriori = new Apriori();
 	  
-	  //ÉèÖÃ×îĞ¡Ö§³Ö¶È
+	  //è®¾ç½®æœ€å°æ”¯æŒåº¦
 	  apriori.setMinSup(100);
-	  //¹¹ÔìÊı¾İ¼¯
+	  //æ„é€ æ•°æ®é›†
 	  data = apriori.buildData();
 	  
-	  //¹¹ÔìÆµ·±1Ïî¼¯
+	  //æ„é€ é¢‘ç¹1é¡¹é›†
 	  List<Set<String>> f1Set = apriori.findF1Item(data);
 	  apriori.printSet(f1Set, 1);
 	  List<Set<String>> result = f1Set;
@@ -40,16 +40,16 @@ public class Apriori {
 	   i++;
 	  }while(result.size() != 0);
 	  long endTime = System.currentTimeMillis();
-	  System.out.println("¹²ÓÃÊ±£º " + (endTime - startTime) + "ms");
+	  System.out.println("å…±ç”¨æ—¶ï¼š " + (endTime - startTime) + "ms");
 	 }
 	 public void setMinSup(int minSup){
 	  this.minSup = minSup;
 	 }
 	 
 	 /**
-	  * ¹¹ÔìÔ­Ê¼Êı¾İ¼¯£¬¿ÉÒÔÎªÖ®Ìá¹©²ÎÊı£¬Ò²¿ÉÒÔ²»Ìá¹©
-	  * Èç¹û²»Ìá¹©²ÎÊı£¬½«°´³ÌĞòÄ¬ÈÏ¹¹ÔìµÄÊı¾İ¼¯
-	  * Èç¹ûÌá¹©²ÎÊıÎªÎÄ¼şÃû£¬ÔòÊ¹ÓÃÎÄ¼şÖĞµÄÊı¾İ¼¯
+	  * æ„é€ åŸå§‹æ•°æ®é›†ï¼Œå¯ä»¥ä¸ºä¹‹æä¾›å‚æ•°ï¼Œä¹Ÿå¯ä»¥ä¸æä¾›
+	  * å¦‚æœä¸æä¾›å‚æ•°ï¼Œå°†æŒ‰ç¨‹åºé»˜è®¤æ„é€ çš„æ•°æ®é›†
+	  * å¦‚æœæä¾›å‚æ•°ä¸ºæ–‡ä»¶åï¼Œåˆ™ä½¿ç”¨æ–‡ä»¶ä¸­çš„æ•°æ®é›†
 	  */
 	 List<String> buildData(String...fileName){
 	  List<String> data = new ArrayList<String>();
@@ -80,7 +80,7 @@ public class Apriori {
 	 }
 	 
 	 /**
-	  * ÕÒ³öºòÑ¡1Ïî¼¯
+	  * æ‰¾å‡ºå€™é€‰1é¡¹é›†
 	  * @param data
 	  * @return result
 	  */
@@ -114,7 +114,7 @@ public class Apriori {
 	 }
 	 
 	 /**
-	  * ÀûÓÃarioriGen·½·¨ÓÉk-1Ïî¼¯Éú³ÉkÏî¼¯
+	  * åˆ©ç”¨arioriGenæ–¹æ³•ç”±k-1é¡¹é›†ç”Ÿæˆké¡¹é›†
 	  *@param preSet
 	  *@return
 	  *
@@ -128,24 +128,24 @@ public class Apriori {
 	   for(int j = i + 1; j < preSetSize; j++ ){
 	    String[] strA1 = preSet.get(i).toArray(new String[0]);
 	    String[] strA2 = preSet.get(j).toArray(new String[0]);
-	    if(isCanLink(strA1, strA2)) {//ÅĞ¶ÏÁ½¸ök-1Ïî¼¯ÊÇ·ñ·ûºÏÁ¬½Ó³ÉKÏî¼¯µÄÌõ¼ş
+	    if(isCanLink(strA1, strA2)) {//åˆ¤æ–­ä¸¤ä¸ªk-1é¡¹é›†æ˜¯å¦ç¬¦åˆè¿æ¥æˆKé¡¹é›†çš„æ¡ä»¶
 	     Set<String> set = new TreeSet<String>();
 	     for(String str : strA1){
-	      set.add(str);//½«strA1¼ÓÈësetÖĞÁ¬³ÉÇ°K-1Ïî¼¯
+	      set.add(str);//å°†strA1åŠ å…¥setä¸­è¿æˆå‰K-1é¡¹é›†
 	     }
-	     set.add((String) strA2[strA2.length-1]);//Á¬½Ó³ÉKÏî¼¯
-	     //ÅĞ¶ÏKÏî¼¯ÊÇ·ñĞèÒª¼ôÇĞµô£¬Èç¹û²»ĞèÒª±»cutµô£¬Ôò¼ÓÈëµ½kÏî¼¯µÄÁĞ±íÖĞ
+	     set.add((String) strA2[strA2.length-1]);//è¿æ¥æˆKé¡¹é›†
+	     //åˆ¤æ–­Ké¡¹é›†æ˜¯å¦éœ€è¦å‰ªåˆ‡æ‰ï¼Œå¦‚æœä¸éœ€è¦è¢«cutæ‰ï¼Œåˆ™åŠ å…¥åˆ°ké¡¹é›†çš„åˆ—è¡¨ä¸­
 	     if(!isNeedCut(preSet, set)) {
 	      result.add(set);
 	     }     
 	    }
 	   }
 	  }
-	  return checkSupport(result);//·µ»ØµÄ¶¼ÊÇÆµ·±KÏî¼¯
+	  return checkSupport(result);//è¿”å›çš„éƒ½æ˜¯é¢‘ç¹Ké¡¹é›†
 	 }
 	 
 	 /**
-	  * °ÑsetÖĞµÄÏî¼¯ÓëÊıÁ¿¼¯±È½Ï²¢½øĞĞ¼ÆËã£¬Çó³öÖ§³Ö¶È´óÓÚÒªÇóµÄÏî¼¯
+	  * æŠŠsetä¸­çš„é¡¹é›†ä¸æ•°é‡é›†æ¯”è¾ƒå¹¶è¿›è¡Œè®¡ç®—ï¼Œæ±‚å‡ºæ”¯æŒåº¦å¤§äºè¦æ±‚çš„é¡¹é›†
 	  * @param set
 	  * @return
 	  */
@@ -184,7 +184,7 @@ public class Apriori {
 	 }
 	 
 	 /**
-	  * ÅĞ¶ÏÁ½¸öÏî¼¯ÄÜ·ñÖ´ĞĞÁ¬½Ó²Ù×÷
+	  * åˆ¤æ–­ä¸¤ä¸ªé¡¹é›†èƒ½å¦æ‰§è¡Œè¿æ¥æ“ä½œ
 	  * @param s1
 	  * @param s2
 	  * @return
@@ -208,18 +208,18 @@ public class Apriori {
 	 }
 	 
 	 /**
-	  * ÅĞ¶ÏsetÊÇ·ñĞèÒª±»cut
+	  * åˆ¤æ–­setæ˜¯å¦éœ€è¦è¢«cut
 	  *
 	  * @param setList
 	  * @param set
 	  * @return
 	  */
-	 boolean isNeedCut(List<Set<String>> setList, Set<String> set) {//setListÖ¸Æµ·±K-1Ïî¼¯£¬setÖ¸ºòÑ¡KÏî¼¯
+	 boolean isNeedCut(List<Set<String>> setList, Set<String> set) {//setListæŒ‡é¢‘ç¹K-1é¡¹é›†ï¼ŒsetæŒ‡å€™é€‰Ké¡¹é›†
 	  boolean flag = false;
-	  List<Set<String>> subSets = getSubset(set);//»ñµÃKÏî¼¯µÄËùÓĞk-1Ïî¼¯
+	  List<Set<String>> subSets = getSubset(set);//è·å¾—Ké¡¹é›†çš„æ‰€æœ‰k-1é¡¹é›†
 	  for ( Set<String> subSet : subSets) {
-	   //ÅĞ¶Ïµ±Ç°µÄk-1Ïî¼¯setÊÇ·ñÔÚÆµ·±k-1Ïî¼¯ÖĞ³öÏÖ£¬Èç¹û³öÏÖ£¬Ôò²»ĞèÒªcut
-	     //ÈôÃ»ÓĞ³öÏÖ£¬ÔòĞèÒª±»cut
+	   //åˆ¤æ–­å½“å‰çš„k-1é¡¹é›†setæ˜¯å¦åœ¨é¢‘ç¹k-1é¡¹é›†ä¸­å‡ºç°ï¼Œå¦‚æœå‡ºç°ï¼Œåˆ™ä¸éœ€è¦cut
+	     //è‹¥æ²¡æœ‰å‡ºç°ï¼Œåˆ™éœ€è¦è¢«cut
 	   if( !isContained(setList, subSet)){
 	    flag = true;
 	    break;
@@ -228,7 +228,7 @@ public class Apriori {
 	  return flag;
 	 }
 	 /**
-	  * ¹¦ÄÜ:ÅĞ¶ÏkÏî¼¯µÄÄ³k-1Ïî¼¯ÊÇ·ñ°üº¬ÔÚÆµ·±k-1Ïî¼¯ÁĞ±íÖĞ
+	  * åŠŸèƒ½:åˆ¤æ–­ké¡¹é›†çš„æŸk-1é¡¹é›†æ˜¯å¦åŒ…å«åœ¨é¢‘ç¹k-1é¡¹é›†åˆ—è¡¨ä¸­
 	  *
 	  * @param setList
 	  * @param set
@@ -242,15 +242,15 @@ public class Apriori {
 	   String [] setArr = set.toArray(new String[0]);
 	   for(int i = 0; i < sArr.length; i++) {
 	    if ( sArr[i].equals(setArr[i])){
-	     //Èç¹û¶ÔÓ¦Î»ÖÃµÄÔªËØÏàÍ¬£¬ÔòpositionÎªµ±Ç°Î»ÖÃµÄÖµ
+	     //å¦‚æœå¯¹åº”ä½ç½®çš„å…ƒç´ ç›¸åŒï¼Œåˆ™positionä¸ºå½“å‰ä½ç½®çš„å€¼
 	     position = i;
 	    } else{
 	     break;
 	    }
 	   }
-	   //Èç¹ûpositionµÈÓÚÊı×éµÄ³¤¶È£¬ËµÃ÷ÒÑ¾­ÕÒµ½Ä³¸ösetListÖĞµÄ¼¯ºÏÓë
-	   //set¼¯ºÏÏàÍ¬ÁË£¬ÍË³öÑ­»·£¬·µ»Ø°üº¬
-	   //·ñÔò£¬°ÑpositionÖÃÎª0½øÈëÏÂÒ»¸ö±È½Ï
+	   //å¦‚æœpositionç­‰äºæ•°ç»„çš„é•¿åº¦ï¼Œè¯´æ˜å·²ç»æ‰¾åˆ°æŸä¸ªsetListä¸­çš„é›†åˆä¸
+	   //seté›†åˆç›¸åŒäº†ï¼Œé€€å‡ºå¾ªç¯ï¼Œè¿”å›åŒ…å«
+	   //å¦åˆ™ï¼ŒæŠŠpositionç½®ä¸º0è¿›å…¥ä¸‹ä¸€ä¸ªæ¯”è¾ƒ
 	   if ( position == sArr.length - 1) {
 	    flag = true;
 	    break;
@@ -263,7 +263,7 @@ public class Apriori {
 	 }
 	 
 	 /**
-	  * »ñµÃkÏî¼¯µÄËùÓĞk-1Ïî×Ó¼¯
+	  * è·å¾—ké¡¹é›†çš„æ‰€æœ‰k-1é¡¹å­é›†
 	  *
 	  * @param set
 	  * @return
@@ -285,10 +285,10 @@ public class Apriori {
 	  return result;
 	 }
 	 /**
-	  * ¹¦ÄÜ£º´òÓ¡Æµ·±Ïî¼¯
+	  * åŠŸèƒ½ï¼šæ‰“å°é¢‘ç¹é¡¹é›†
 	  */
 	 void printSet(List<Set<String>> setList, int i){
-	  System.out.print("Æµ·±" + i + "Ïî¼¯£º ¹²" + setList.size() + "Ïî£º {");
+	  System.out.print("é¢‘ç¹" + i + "é¡¹é›†ï¼š å…±" + setList.size() + "é¡¹ï¼š {");
 	  for(Set<String> set : setList) {
 	   System.out.print("[");
 	   for(String str : set) {

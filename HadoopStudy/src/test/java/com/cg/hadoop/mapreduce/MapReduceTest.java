@@ -1,4 +1,4 @@
-package com.cg.mapreduce;
+package com.cg.hadoop.mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;

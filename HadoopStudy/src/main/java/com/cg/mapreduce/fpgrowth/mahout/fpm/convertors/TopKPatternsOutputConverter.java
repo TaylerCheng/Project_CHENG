@@ -66,7 +66,7 @@ public final class TopKPatternsOutputConverter<A extends Comparable<? super A>> 
       perAttributePatterns.add(returnItemSet);
     }
     Collections.reverse(perAttributePatterns);
-    //Êä³öÆµ·±Ä£Ê½
+    //è¾“å‡ºé¢‘ç¹æ¨¡å¼
     collector.collect(reverseMapping.get(key), perAttributePatterns);
   }
 }

@@ -45,7 +45,7 @@ public class IncreFPGrowthAlgorithm {
 		this.dbMinSuport = dbMinSuport;
 	}
 
-	// ´ÓÈô¸É¸öÎÄ¼şÖĞ¶ÁÈëTransaction Record
+	// ä»è‹¥å¹²ä¸ªæ–‡ä»¶ä¸­è¯»å…¥Transaction Record
 	public List<List<String>> readTransRocords(String... filenames) {
 		List<List<String>> transaction = null;
 		if (filenames.length > 0) {
@@ -79,34 +79,34 @@ public class IncreFPGrowthAlgorithm {
 		return transaction;
 	}
 
-	// FP-GrowthËã·¨
+	// FP-Growthç®—æ³•
 	public void FPGrowth(List<List<String>> transRecords,
 			List<String> postPattern) {
-		// ¹¹½¨ÏîÍ·±í£¬Í¬Ê±Ò²ÊÇÆµ·±1Ïî¼¯
+		// æ„å»ºé¡¹å¤´è¡¨ï¼ŒåŒæ—¶ä¹Ÿæ˜¯é¢‘ç¹1é¡¹é›†
 		ArrayList<TreeNode> HeaderTable = buildHeaderTable(transRecords,
 				postPattern);
-		// ¹¹½¨FP-Tree
+		// æ„å»ºFP-Tree
 		TreeNode treeRoot = buildFPTree(transRecords, HeaderTable);
-		// Èç¹ûFP-TreeÎª¿ÕÔò·µ»Ø
+		// å¦‚æœFP-Treeä¸ºç©ºåˆ™è¿”å›
 		if (treeRoot.getChildren() == null
 				|| treeRoot.getChildren().size() == 0)
 			return;
 
-		// ÕÒµ½ÏîÍ·±íµÄÃ¿Ò»ÏîµÄÌõ¼şÄ£Ê½»ù£¬½øÈëµİ¹éµü´ú
+		// æ‰¾åˆ°é¡¹å¤´è¡¨çš„æ¯ä¸€é¡¹çš„æ¡ä»¶æ¨¡å¼åŸºï¼Œè¿›å…¥é€’å½’è¿­ä»£
 		for (TreeNode header : HeaderTable) {
-			// ºó×ºÄ£Ê½Ôö¼ÓÒ»Ïî
+			// åç¼€æ¨¡å¼å¢åŠ ä¸€é¡¹
 			List<String> newPostPattern = new LinkedList<String>();
 			newPostPattern.add(header.getName());
 			if (postPattern != null)
 				newPostPattern.addAll(postPattern);
-			// Ñ°ÕÒheaderµÄÌõ¼şÄ£Ê½»ùCPB£¬·ÅÈënewTransRecordsÖĞ
+			// å¯»æ‰¾headerçš„æ¡ä»¶æ¨¡å¼åŸºCPBï¼Œæ”¾å…¥newTransRecordsä¸­
 			List<List<String>> newTransRecords = new LinkedList<List<String>>();
 			TreeNode backnode = header.getNextHomonym();
 			while (backnode != null) {
 				int counter = backnode.getCount();
 				List<String> prenodes = new ArrayList<String>();
 				TreeNode parent = backnode;
-				// ±éÀúbacknodeµÄ×æÏÈ½Úµã£¬·Åµ½prenodesÖĞ
+				// éå†backnodeçš„ç¥–å…ˆèŠ‚ç‚¹ï¼Œæ”¾åˆ°prenodesä¸­
 				while ((parent = parent.getParent()).getName() != null) {
 					prenodes.add(parent.getName());
 				}
@@ -115,12 +115,12 @@ public class IncreFPGrowthAlgorithm {
 				}
 				backnode = backnode.getNextHomonym();
 			}
-			// µİ¹éµü´ú
+			// é€’å½’è¿­ä»£
 			FPGrowth(newTransRecords, newPostPattern);
 		}
 	}
 
-	// ¹¹½¨ÏîÍ·±í£¬Í¬Ê±Ò²ÊÇÆµ·±1Ïî¼¯
+	// æ„å»ºé¡¹å¤´è¡¨ï¼ŒåŒæ—¶ä¹Ÿæ˜¯é¢‘ç¹1é¡¹é›†
 	public ArrayList<TreeNode> buildHeaderTable(
 			List<List<String>> transRecords, List<String> postPattern) {
 		ArrayList<TreeNode> F1 = null;
@@ -128,7 +128,7 @@ public class IncreFPGrowthAlgorithm {
 		if (transRecords.size() > 0) {
 			F1 = new ArrayList<TreeNode>();
 			Map<String, TreeNode> map = new HashMap<String, TreeNode>();
-			// ¼ÆËãÊÂÎñÊı¾İ¿âÖĞ¸÷ÏîµÄÖ§³Ö¶È
+			// è®¡ç®—äº‹åŠ¡æ•°æ®åº“ä¸­å„é¡¹çš„æ”¯æŒåº¦
 			for (List<String> record : transRecords) {
 				for (String item : record) {
 					if (!map.keySet().contains(item)) {
@@ -141,7 +141,7 @@ public class IncreFPGrowthAlgorithm {
 				}
 			}
 
-			// °ÑÖ§³Ö¶È´óÓÚ£¨»òµÈÓÚ£©minSupµÄÏî¼ÓÈëµ½F1ÖĞ
+			// æŠŠæ”¯æŒåº¦å¤§äºï¼ˆæˆ–ç­‰äºï¼‰minSupçš„é¡¹åŠ å…¥åˆ°F1ä¸­
 			if (postPattern != null) {
 				Set<String> names = map.keySet();
 				for (String name : names) {
@@ -183,7 +183,7 @@ public class IncreFPGrowthAlgorithm {
 						F_1DB.put(name, tnode);
 					}
 				}
-				// ½«ĞÂµÄÍ·±í±£´æ
+				// å°†æ–°çš„å¤´è¡¨ä¿å­˜
 				FileOutputStream fos0 = new FileOutputStream(new_hl);
 				ObjectOutputStream oos0 = new ObjectOutputStream(fos0);
 				oos0.writeObject(F_1DB);
@@ -224,7 +224,7 @@ public class IncreFPGrowthAlgorithm {
 			preResult.get(items).used();
 			if (total >= minSuport) {
 				tnode.setCount(total);
-				// Êä³öÏîÍ·±íµÄÃ¿Ò»Ïî+postPattern
+				// è¾“å‡ºé¡¹å¤´è¡¨çš„æ¯ä¸€é¡¹+postPattern
 				try {
 					if (postPattern != null) {
 						bw.append(tnode.getCount() + "\t" + tnode.getName());
@@ -267,10 +267,10 @@ public class IncreFPGrowthAlgorithm {
 		return false;
 	}
 
-	// ¹¹½¨FP-Tree
+	// æ„å»ºFP-Tree
 	public TreeNode buildFPTree(List<List<String>> transRecords,
 			ArrayList<TreeNode> F1) {
-		TreeNode root = new TreeNode(); // ´´½¨Ê÷µÄ¸ù½Úµã
+		TreeNode root = new TreeNode(); // åˆ›å»ºæ ‘çš„æ ¹èŠ‚ç‚¹
 		for (List<String> transRecord : transRecords) {
 			LinkedList<String> record = sortByF1(transRecord, F1);
 			TreeNode subTreeRoot = root;
@@ -288,12 +288,12 @@ public class IncreFPGrowthAlgorithm {
 		return root;
 	}
 
-	// °Ñ½»Ò×¼ÇÂ¼°´ÏîµÄÆµ·±³ÌĞò½µĞòÅÅÁĞ
+	// æŠŠäº¤æ˜“è®°å½•æŒ‰é¡¹çš„é¢‘ç¹ç¨‹åºé™åºæ’åˆ—
 	public LinkedList<String> sortByF1(List<String> transRecord,
 			ArrayList<TreeNode> F1) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		for (String item : transRecord) {
-			// ÓÉÓÚF1ÒÑ¾­ÊÇ°´½µĞòÅÅÁĞµÄ£¬
+			// ç”±äºF1å·²ç»æ˜¯æŒ‰é™åºæ’åˆ—çš„ï¼Œ
 			for (int i = 0; i < F1.size(); i++) {
 				TreeNode tnode = F1.get(i);
 				if (tnode.getName().equals(item)) {
@@ -307,7 +307,7 @@ public class IncreFPGrowthAlgorithm {
 			@Override
 			public int compare(Entry<String, Integer> arg0,
 					Entry<String, Integer> arg1) {
-				// ½µĞòÅÅÁĞ
+				// é™åºæ’åˆ—
 				return arg0.getValue() - arg1.getValue();
 			}
 		});
@@ -318,7 +318,7 @@ public class IncreFPGrowthAlgorithm {
 		return rest;
 	}
 
-	// °Ñrecord×÷ÎªancestorµÄºó´ú²åÈëÊ÷ÖĞ
+	// æŠŠrecordä½œä¸ºancestorçš„åä»£æ’å…¥æ ‘ä¸­
 	public void addNodes(TreeNode ancestor, LinkedList<String> record,
 			ArrayList<TreeNode> F1) {
 		if (record.size() > 0) {
@@ -344,14 +344,14 @@ public class IncreFPGrowthAlgorithm {
 		}
 	}
 
-	// ±£³Ö1-Ïî¼¯
+	// ä¿æŒ1-é¡¹é›†
 	public Map<String, TreeNode> countItems(List<List<String>> transRecords) {
 		ArrayList<TreeNode> F1 = null;
 		Map<String, TreeNode> map = null;
 		if (transRecords.size() > 0) {
 			F1 = new ArrayList<TreeNode>();
 			map = new HashMap<String, TreeNode>();
-			// ¼ÆËãÊÂÎñÊı¾İ¿âÖĞ¸÷ÏîµÄÖ§³Ö¶È
+			// è®¡ç®—äº‹åŠ¡æ•°æ®åº“ä¸­å„é¡¹çš„æ”¯æŒåº¦
 			for (List<String> record : transRecords) {
 				for (String item : record) {
 					if (!map.keySet().contains(item)) {
@@ -449,30 +449,30 @@ public class IncreFPGrowthAlgorithm {
 	}
 
 	private void init(List<List<String>> transRecords) throws Exception {
-		// Êı¾İÊıÁ¿
+		// æ•°æ®æ•°é‡
 		int total = 2;
-		// ĞòÁĞ»¯ĞÂÔöÊı¾İ
+		// åºåˆ—åŒ–æ–°å¢æ•°æ®
 		FileOutputStream fos = new FileOutputStream(BASE_DIR
 				+ "/records/data2.ser");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(transRecords);
 
-		// Éú³ÉÆµ·±ÏîµÄÂ·¾¶
+		// ç”Ÿæˆé¢‘ç¹é¡¹çš„è·¯å¾„
 		writePath = BASE_DIR + "/result/fre_" + total;
 		bw = new BufferedWriter(new FileWriter(writePath));
 
-		// ÉÏ´ÎµÄÍ·±í
+		// ä¸Šæ¬¡çš„å¤´è¡¨
 		old_hl = BASE_DIR + "/headlist/head_" + (total - 1);
-		// ĞÂµÄÍ·±í
+		// æ–°çš„å¤´è¡¨
 		new_hl = BASE_DIR + "/headlist/head_" + total;
 
-		// ¶ÁÈ¡ÉÏ´ÎµÄÆµ·±Ïî
+		// è¯»å–ä¸Šæ¬¡çš„é¢‘ç¹é¡¹
 		preResult = readPreResult(BASE_DIR + "/result/fre_" + (total - 1));
 		oos.close();
 	}
 
 	private static List<List<String>> getDB() throws Exception {
-		// ¶ÁÈ¡Ö®Ç°µÄDB
+		// è¯»å–ä¹‹å‰çš„DB
 		FileInputStream fis0 = new FileInputStream(BASE_DIR
 				+ "/records/data1.ser");
 		ObjectInputStream ois0 = new ObjectInputStream(fis0);
@@ -485,22 +485,22 @@ public class IncreFPGrowthAlgorithm {
 		long startTime = System.currentTimeMillis();
 
 		IncreFPGrowthAlgorithm fptree = new IncreFPGrowthAlgorithm();
-		// ÉèÖÃÖ§³Ö¶È
+		// è®¾ç½®æ”¯æŒåº¦
 		fptree.setMinSuport(6, 2);
-		// ĞÂÔöÊı¾İÂ·¾¶
+		// æ–°å¢æ•°æ®è·¯å¾„
 		List<List<String>> db = fptree
 				.readTransRocords(BASE_DIR + "/data2.txt");
 		fptree.init(db);
-		// ¿ªÊ¼ÍÚ¾ò
+		// å¼€å§‹æŒ–æ˜
 		fptree.FPGrowth(db, null);
 
 		writeUnusedResult(preResult);
 		
 		DB = getDB();
-		// É¨ÃèºòÑ¡Ïî¼¯
+		// æ‰«æå€™é€‰é¡¹é›†
 		SearchDB(DB, candidateSet);
 
-		// ´æ´¢ĞÂµÄµÄDB
+		// å­˜å‚¨æ–°çš„çš„DB
 		// FileOutputStream fos_DB = new FileOutputStream(
 		// "G:/result/transRecords/DB");
 		// ObjectOutputStream oos_DB = new ObjectOutputStream(fos0);
@@ -510,8 +510,8 @@ public class IncreFPGrowthAlgorithm {
 
 		bw.close();
 
-		System.out.println("ÏîÄ¿Êı£º" + count);
+		System.out.println("é¡¹ç›®æ•°ï¼š" + count);
 		long endTime = System.currentTimeMillis();
-		System.out.println("¹²ÓÃÊ±£º " + (endTime - startTime) + "ms");
+		System.out.println("å…±ç”¨æ—¶ï¼š " + (endTime - startTime) + "ms");
 	}
 }
