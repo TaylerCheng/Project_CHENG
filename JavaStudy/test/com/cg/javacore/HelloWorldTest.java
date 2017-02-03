@@ -3,6 +3,8 @@ package com.cg.javacore;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -56,6 +58,20 @@ public class HelloWorldTest {
         Long nullLong = null;
         long l = nullLong;
         System.out.println(l);
+    }
+
+    @Test
+    public void test005() throws Exception {
+//        calendar.set(Calendar.DATE, calendar.getMinimum(Calendar.DAY_OF_MONTH));
+//        calendar.set(Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+
+        System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
 }

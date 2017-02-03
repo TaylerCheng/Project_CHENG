@@ -44,10 +44,8 @@ import org.apache.mahout.common.Pair;
 import org.apache.mahout.common.Parameters;
 import org.apache.mahout.common.iterator.sequencefile.PathType;
 import org.apache.mahout.common.iterator.sequencefile.SequenceFileDirIterable;
-import org.apache.mahout.common.iterator.sequencefile.SequenceFileIterable;
-import org.apache.mahout.math.list.IntArrayList;
 
-import com.cg.utils.EJob;
+import com.cg.mapreduce.utils.EJob;
 import com.google.common.collect.Lists;
 
 /**

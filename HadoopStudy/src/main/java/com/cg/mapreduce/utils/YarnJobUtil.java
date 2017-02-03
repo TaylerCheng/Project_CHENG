@@ -1,4 +1,4 @@
-package com.cg.utils;
+package com.cg.mapreduce.utils;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;

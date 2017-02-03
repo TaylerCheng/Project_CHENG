@@ -17,12 +17,12 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-<property>
-    <name>fs.default.name</name>
-    <value>hdfs://master.hadoop:9000</value>
-</property>
-<property>
-    <name>hadoop.tmp.dir</name>
-    <value>/home/hadoop/modules/hadoop/hadoop-2.6.0/tmp</value>
-</property>
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://master.hadoop:9000</value>
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/home/hadoop/modules/hadoop/hadoop-2.6.0/tmp</value>
+    </property>
 </configuration>

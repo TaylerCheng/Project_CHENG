@@ -1,4 +1,4 @@
-package com.cg.utils;
+package com.cg.mapreduce.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
