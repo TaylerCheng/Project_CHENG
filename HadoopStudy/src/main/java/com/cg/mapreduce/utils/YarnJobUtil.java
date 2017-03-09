@@ -25,44 +25,36 @@ public class YarnJobUtil {
 
     private static final Logger logger = Logger.getLogger(YarnJobUtil.class);
 
-    private static List<URL> classPath = new ArrayList<URL>();
-
-    public static Job initJob(Configuration conf, String jobName, String classRootPath) {
-        Job job = null;
-        try {
-            File jarFile = createTempJar(classRootPath);
-            //            addClasspath(classRootPath);
-            ClassLoader classLoader = getClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-            job = Job.getInstance(conf, jobName);
-            job.setJar(jarFile.toString());
-        } catch (IOException e) {
-            logger.info("Init job on yarn failed.", e);
-            System.exit(0);
-        }
-        return job;
-    }
-
-    // To declare method
-    public static File createTempJar(String classOutputPath) throws IOException {
-        if (!new File(classOutputPath).exists()) {
+    public static File getJobJarFile(String classpath) throws IOException {
+        if (!new File(classpath).exists()) {
             return null;
         }
-        Manifest manifest = new Manifest();
-        manifest.getMainAttributes().putValue("Manifest-Version", "1.0");
-        final File jarFile = File.createTempFile("EJob-", ".jar", new File(
-                System.getProperty("java.io.tmpdir")));
+        final File jarFile = File.createTempFile("YarnJob-", ".jar", new File(System.getProperty("java.io.tmpdir")));
+        JarOutputStream out = null;
+        try {
+            Manifest manifest = new Manifest();
+            manifest.getMainAttributes().putValue("Manifest-Version", "1.0");
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                jarFile.delete();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    jarFile.delete();
+                }
+            });
+            out = new JarOutputStream(
+                    new FileOutputStream(jarFile), manifest);
+            createTempJarInner(out, new File(classpath), "");
+        } catch (IOException e) {
+            logger.info("Init job on yarn failed.", e);
+            throw e;
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+
+                }
             }
-        });
-
-        JarOutputStream out = new JarOutputStream(
-                new FileOutputStream(jarFile), manifest);
-        createTempJarInner(out, new File(classOutputPath), "");
-        out.close();
+        }
         return jarFile;
     }
 
@@ -86,34 +78,6 @@ public class YarnJobUtil {
                 n = in.read(buffer);
             }
             in.close();
-        }
-    }
-
-    public static ClassLoader getClassLoader() {
-        ClassLoader parent = Thread.currentThread().getContextClassLoader();
-        if (parent == null) {
-            parent = EJob.class.getClassLoader();
-        }
-        if (parent == null) {
-            parent = ClassLoader.getSystemClassLoader();
-        }
-        return new URLClassLoader(classPath.toArray(new URL[0]), parent);
-    }
-
-    public static void addClasspath(String component) {
-
-        if ((component != null) && (component.length() > 0)) {
-            try {
-                File f = new File(component);
-
-                if (f.exists()) {
-                    URL key = f.getCanonicalFile().toURL();
-                    if (!classPath.contains(key)) {
-                        classPath.add(key);
-                    }
-                }
-            } catch (IOException e) {
-            }
         }
     }
 

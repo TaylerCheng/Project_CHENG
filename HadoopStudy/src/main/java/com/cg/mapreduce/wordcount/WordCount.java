@@ -13,34 +13,42 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
+
 public class WordCount {
 
     public static Logger logger = Logger.getLogger(WordCount.class);
 
     public static final String JOB_NAME = "WordCountTest";
-    /**
-     *  LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
-     */
+    // LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
     public static final ExecuteMode executeMode = ExecuteMode.CLUSTER;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception{
 
         Configuration conf = new Configuration();
         String[] otherArgs = new GenericOptionsParser(conf, args)
                 .getRemainingArgs();
-        if (otherArgs.length < 3) {
-            logger.error("parameters should >= 3");
+        if (otherArgs.length < 2) {
+            logger.error("parameters should >= 2");
             System.exit(2);
         }
 
         // Section 1 init job
-        Job job = null;
+        Job job = Job.getInstance(conf, JOB_NAME);
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
-            String classpath = otherArgs[0];
-            conf.set("mapred.reduce.tasks", "2");
-            job = YarnJobUtil.initJob(conf, JOB_NAME, classpath);
+            String classpath = otherArgs[2];
+            conf.set("mapreduce.job.reduces", "2");
+            File jarfile = YarnJobUtil.getJobJarFile(classpath);
+            if (jarfile != null) {
+                logger.warn("远程提交作业初始化jar包成功");
+                job.setJar(jarfile.toString());
+            } else {
+                logger.warn("远程提交作业初始化jar包失败，改为本地运行");
+                conf.set("mapreduce.framework.name", "local");
+                job.setJarByClass(WordCount.class);
+            }
         } else {
-            job = Job.getInstance(conf, JOB_NAME);
+            conf.set("mapreduce.framework.name", "local");
             job.setJarByClass(WordCount.class);
         }
 
@@ -49,10 +57,9 @@ public class WordCount {
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
         job.setPartitionerClass(MyPartitioner.class);
-
         job.setInputFormatClass(TextInputFormat.class);
-        TextInputFormat.addInputPath(job, new Path(otherArgs[1]));
-        Path outputPath = new Path(otherArgs[2]);
+        TextInputFormat.addInputPath(job, new Path(otherArgs[0]));
+        Path outputPath = new Path(otherArgs[1]);
         FileSystem fs = outputPath.getFileSystem(conf);
         if (fs.exists(outputPath)) {
             fs.delete(outputPath,true);

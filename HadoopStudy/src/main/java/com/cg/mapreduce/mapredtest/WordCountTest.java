@@ -15,6 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.net.URI;
 
 public class WordCountTest {
@@ -38,18 +39,18 @@ public class WordCountTest {
         }
 
         // Section 1 init job
-        Job job = null;
+        Job job =Job.getInstance(conf, JOB_NAME);
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
             String classpath = otherArgs[0];
             conf.set("mapred.reduce.tasks", "2");
             //弃用uber模式，重用JVM
             conf.set("mapreduce.job.ubertask.enable","true");
-            job = YarnJobUtil.initJob(conf, JOB_NAME, classpath);
+            File jobJarFile = YarnJobUtil.getJobJarFile(classpath);
+            job.setJar(jobJarFile.toString());
         } else {
             //设置为本地运行
             conf.set("mapreduce.framework.name", "local");
             //            conf.set("mapred.reduce.tasks", "2");
-            job = Job.getInstance(conf, JOB_NAME);
             job.setJarByClass(WordCountTest.class);
         }
 
