@@ -1,18 +1,13 @@
-package com.cg.others;
+package com.cg.temp;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
-import javax.print.attribute.standard.PDLOverrideSupported;
 
 public class Dealtype {
 
@@ -103,7 +98,7 @@ public class Dealtype {
 	}
 
 	private void getMinValue() throws IOException {
-		// ¶ÁÈ¡ÆÂ¶ÈÊı¾İ
+		// è¯»å–å¡åº¦æ•°æ®
 		File pd = new File("C:/Users/cheng/Desktop/pd.txt");
 		InputStreamReader pd_isr = new InputStreamReader(
 				new FileInputStream(pd));
@@ -116,12 +111,12 @@ public class Dealtype {
 			String[] nums = line.split("\t");
 			if (nums != null && nums.length == 2) {
 				pd_dis[stage] = Integer.valueOf(nums[1]);
-				pd_i[stage] = -Float.valueOf(nums[0]);// È¡¸ºÊı
+				pd_i[stage] = -Float.valueOf(nums[0]);// å–è´Ÿæ•°
 			}
 			stage++;
 		}
 
-		// ¶ÁÈ¡ÇúÂÊÊı¾İ
+		// è¯»å–æ›²ç‡æ•°æ®
 		File ql = new File("C:/Users/cheng/Desktop/ql.txt");
 		InputStreamReader ql_isr = new InputStreamReader(
 				new FileInputStream(ql));

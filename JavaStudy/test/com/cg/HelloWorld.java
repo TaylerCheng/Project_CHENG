@@ -1,5 +1,5 @@
 
-package com.cg.javacore;
+package com.cg;
 
 import java.util.*;
 

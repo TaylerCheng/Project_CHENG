@@ -1,7 +1,10 @@
 package com.cg.javacore.cloneobject;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Father  {
 	String name;
 
@@ -16,11 +19,15 @@ public class Father  {
     protected void add(ArrayList<String> list) {
 	
 	}
-	
-    private void sayYes() {
-		System.out.println("yes");
+
+	public String getName() {
+		return name;
 	}
-    
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String toString() {
 		return name;

@@ -1,4 +1,4 @@
-package com.cg.datastructure;
+package com.cg.datastructure.list;
 
 
 public class LinkedListCG<E> implements ListCG<E> {

@@ -1,7 +1,9 @@
 package com.cg.javacore;
 
+import com.mongodb.internal.HexUtils;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,16 +64,46 @@ public class HelloWorldTest {
 
     @Test
     public void test005() throws Exception {
-//        calendar.set(Calendar.DATE, calendar.getMinimum(Calendar.DAY_OF_MONTH));
-//        calendar.set(Calendar.HOUR_OF_DAY, 0);
-//        calendar.set(Calendar.MINUTE, 0);
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.MILLISECOND, 0);
-
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH,1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH,-1);
+        System.out.println(calendar.getTime());
+    }
 
-        System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
+    @Test
+    public void test006() throws Exception {
+        List<String> list = new ArrayList<String>();
+        list.add("1");
+        list.add("2");
+//        list.add("3");
+//        list.add("4");
+        for (String temp : list) {
+            if ("1".equals(temp)) {
+                list.remove(temp);
+            }
+            System.out.println(temp);
+        }
+        System.out.println(list);
+    }
+
+    @Test
+    public void test007() throws Exception {
+        String str = null;
+        if (str == null || str.contains("")) {
+            System.out.println(str);
+        }
+    }
+
+    @Test
+    public void test008() throws Exception {
+        String str = "程";
+        System.out.println(HexUtils.toHex(str.getBytes("utf-8")));
+
     }
 
 }

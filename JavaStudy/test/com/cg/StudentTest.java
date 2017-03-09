@@ -1,4 +1,4 @@
-package com.cg.test;
+package com.cg;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

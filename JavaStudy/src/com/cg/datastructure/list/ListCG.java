@@ -1,4 +1,4 @@
-package com.cg.datastructure;
+package com.cg.datastructure.list;
 
 interface ListCG<E> {
 	public void add(E e);
