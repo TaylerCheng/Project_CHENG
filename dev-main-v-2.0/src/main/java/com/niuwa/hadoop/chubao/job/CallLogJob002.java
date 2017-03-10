@@ -40,10 +40,11 @@ public class CallLogJob002 extends BaseJob {
 
 	public static class CallLogReducer extends NiuwaReducer<Text, Text, NullWritable, Text> {
 		private Text outValue = new Text();
-		private JSONObject outObj= new JSONObject();
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
+			JSONObject outObj = new JSONObject();
+
 			//原IndicatorJob003统计字段
 			int total_call_num_3_month = 0;//客户最近三个月通话记录数
 
@@ -136,8 +137,18 @@ public class CallLogJob002 extends BaseJob {
 			for (Integer mapkey : top5Call) {
 				top5sum_call += mapkey;
 			}
-			double call_top5_perct_type = (double) top5sum_call / total_call_sum;//最频繁呼出前5号码总呼出数占总呼出数占比
-			double call_true_rate_type = (double) call_out_true_6_month_sum / call_out_6_month_sum;//呼出电话中标记为true的号码数占呼出总号码数的占比(若某号码曾经被标记为true, 则该号码记为true, 排除总呼出数=1的号码)
+			double call_top5_perct_type ;//最频繁呼出前5号码总呼出数占总呼出数占比
+			double call_true_rate_type ;//呼出电话中标记为true的号码数占呼出总号码数的占比(若某号码曾经被标记为true, 则该号码记为true, 排除总呼出数=1的号码)
+			if (total_call_sum == 0) {
+				call_top5_perct_type = 0.0;
+			} else {
+				call_top5_perct_type = 1.0 * top5sum_call / total_call_sum;
+			}
+			if (call_out_6_month_sum == 0) {
+				call_true_rate_type = 0.0;
+			} else {
+				call_true_rate_type = 1.0 * call_out_true_6_month_sum / call_out_6_month_sum;
+			}
 			if (call_true_rate_type >= 0.3) {
 				outObj.put("call_true_rate_type", call_true_rate_type);
 				outObj.put("call_out_6_month_sum", call_out_6_month_sum);
