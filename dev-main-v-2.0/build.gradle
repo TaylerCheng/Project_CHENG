@@ -20,7 +20,7 @@ sourceSets {
 
 jar {
     //manifest {
-    //    attributes 'ChuBaoMain-Class': 'com.niuwa.hadoop.jobs.ChubaoAddrNum'
+    //    attributes 'Main-Class': 'com.niuwa.hadoop.jobs.ChubaoAddrNum'
     //}
     into('lib') {
         from configurations.compile

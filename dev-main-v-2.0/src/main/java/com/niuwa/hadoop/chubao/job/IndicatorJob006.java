@@ -253,7 +253,7 @@ public class IndicatorJob006 extends BaseJob {
         // 输入路径
         FileInputFormat.addInputPath(job, ChubaoJobConfig.getInputPath(ChubaoJobConfig.INPUT_LOAN));
         FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob005.class.getName()));
-        FileInputFormat.addInputPath(job, tempPaths.get(CallLogJob002.class.getName()));
+        FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob008.class.getName()));
         // 输出路径
         FileOutputFormat.setOutputPath(job, tempPaths.get(IndicatorJob006.class.getName()) );
         // 删除原有的输出
@@ -264,7 +264,7 @@ public class IndicatorJob006 extends BaseJob {
     
 	@Override
 	public final HashSet<String> getDependingJobNames() {
-        return Sets.newHashSet(IndicatorJob005.class.getName(), CallLogJob002.class.getName());
+        return Sets.newHashSet(IndicatorJob005.class.getName(), IndicatorJob008.class.getName());
     }
 
 }

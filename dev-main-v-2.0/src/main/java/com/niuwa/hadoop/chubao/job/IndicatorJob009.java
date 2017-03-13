@@ -10,6 +10,7 @@ import com.niuwa.hadoop.chubao.enums.CallTypeEnum;
 import com.niuwa.hadoop.chubao.enums.OtherPhoneSegmentEnum;
 import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -47,7 +48,7 @@ public class IndicatorJob009 extends BaseJob{
 
 			String userId = callLogJson.getString("user_id");
 			String otherPhone = callLogJson.getString("other_phone");
-			if (ChubaoUtil.telVilidate(otherPhone)) {
+			if (StringUtils.isNotEmpty(otherPhone)) {
 				outKey.set(userId + "\t" + otherPhone);
 				outObj.put("call_type", callLogJson.getIntValue("call_type"));
 				outObj.put("call_duration", callLogJson.getIntValue("call_duration"));
@@ -97,14 +98,20 @@ public class IndicatorJob009 extends BaseJob{
 				}
 				contact_flag = contact_flag || callContact;
 			}
+			String[] keys = key.toString().split("\t");
+			if ("1004b0a00c79a7b2bb2968f2b08b54e9c04b85b1".equals(keys[0])) {
+				System.out.println();
+				if ("1372457****".equals(keys[1])){
+					System.out.println();
+				}
+			}
 			OtherPhoneSegmentEnum segementEnum = computeOtherPhoneSegement(ttl_cnt, connected_call_sum,
 					calling_sum, called_sum, connected_called_sum, total_call_time,
 					contact_flag);
 
-			String[] keys = key.toString().split("\t");
 			outObj.put("user_id", keys[0]);
 			outObj.put("other_phone", keys[1]);
-			outObj.put("calling_sum",calling_sum);
+			outObj.put("ttl_cnt",ttl_cnt);
 			outObj.put("other_phone_segement",segementEnum.getSegment());
 			outValue.set(outObj.toJSONString());
 			context.write(NullWritable.get(), outValue);
@@ -133,16 +140,16 @@ public class IndicatorJob009 extends BaseJob{
 		 */
 		private OtherPhoneSegmentEnum computeOtherPhoneSegement(int ttl_cnt, int connected_call_sum, int calling_sum, int called_sum,
 				int connected_called_sum, Long total_call_time, boolean contact_flag) {
-			if (calling_sum > 0 && called_sum >= 0 && contact_flag) {
+			if (calling_sum > 0 && called_sum > 0 && contact_flag) {
 				double connect_rate = 1.0 * connected_call_sum / ttl_cnt;//接通次数占比=接通次数/通话次数
-				double call_in_connect_rate = 1.0 * connected_call_sum / called_sum; //拨入接通次数占比=拨入接通次数/拨入次数
+				double call_in_connect_rate = 1.0 * connected_called_sum / called_sum; //拨入接通次数占比=拨入接通次数/拨入次数
 				int mean_call_duration = 0;
 				if (connected_call_sum>0) {
 					mean_call_duration = (int) (total_call_time / connected_call_sum);    //平均通话时长=总通话时长/接通次数
 				}
 				if (connect_rate >= 0.5) {
 					if (call_in_connect_rate >= 0.6) {
-						if (connected_called_sum < 50) {
+						if (ttl_cnt < 50) {
 							return OtherPhoneSegmentEnum.GOOD;
 						} else {
 							if (mean_call_duration >= 90) {

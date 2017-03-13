@@ -23,7 +23,7 @@ import com.niuwa.hadoop.util.HadoopUtil;
 /**
  * 
  * [job1]
- * map:		CallLogMapper
+ * map:		UserIdMapper
  * combiner:IntCombiner
  * reduce: 	IntSumReducer
  * input: 	通话记录

@@ -59,27 +59,31 @@ public class IndicatorJob010 extends BaseJob{
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
-			int good_calling_sum = 0;//好电话拨打次数
-			int bad_calling_sum = 0;//坏电话拨打次数
-			int total_calling_sum = 0;//总拨打次数
+			int good_call_sum = 0;//好电话拨打次数
+			int bad_call_sum = 0;//坏电话拨打次数
+			int total_call_sum = 0;//总拨打次数
 
+			if ("1004b0a00c79a7b2bb2968f2b08b54e9c04b85b1".equals(key.toString())){
+				System.out.println();
+			}
 			for (Text val : values) {
 				JSONObject json = JSONObject.parseObject(val.toString());
-				int calling_sum = json.getIntValue("calling_sum");
+				int ttl_cnt = json.getIntValue("ttl_cnt");
+				String other_phone = json.getString("other_phone");
 				String other_phone_segement = json.getString("other_phone_segement");
 
-				total_calling_sum += calling_sum;
+				total_call_sum += ttl_cnt;
 				if (OtherPhoneSegmentEnum.GOOD.getSegment().equals(other_phone_segement)) {
-					good_calling_sum += calling_sum;
+					good_call_sum += ttl_cnt;
 				} else if (OtherPhoneSegmentEnum.BAD.getSegment().equals(other_phone_segement)) {
-					bad_calling_sum += calling_sum;
+					bad_call_sum += ttl_cnt;
 				}
 			}
 			double good_cnt_rate = 0.0;//好电话拨打次数占比（好电话拨打次数/总拨打次数）
 			double bad_cnt_rate = 0.0;//坏电话拨打次数占比（坏电话拨打次数/总拨打次数）
-			if (total_calling_sum > 0) {
-				good_cnt_rate = 1.0 * good_calling_sum / total_calling_sum;
-				bad_cnt_rate = 1.0 * bad_calling_sum / total_calling_sum;
+			if (total_call_sum > 0) {
+				good_cnt_rate = 1.0 * good_call_sum / total_call_sum;
+				bad_cnt_rate = 1.0 * bad_call_sum / total_call_sum;
 			}
 			outObj.put("user_id", key.toString());
 			outObj.put("good_cnt_rate",good_cnt_rate);

@@ -107,7 +107,7 @@ public class JugementJob extends BaseJob {
             DecimalFormat df = new DecimalFormat("#.00000"); 
             DecimalFormat df2 = new DecimalFormat("#.00"); 
             
-             initResultObj(resultObj);
+            initResultObj(resultObj);
             
 			for(Text value : values){
 				JSONObject lineObj= JSONObject.parseObject(value.toString());
@@ -163,34 +163,35 @@ public class JugementJob extends BaseJob {
 //          boolean rule = rule1 && rule2 && rule3 && rule4 && rule5 && rule6 && rule7 && rule8 && rule9;
 			boolean rule = rule1 && rule2 && rule3 && rule5 && rule6 && rule7 && rule8 && rule9;
 
-			if (rule1) {
-				ChuBaoMain.rule[1]++;
-			}
-			if (rule2) {
-				ChuBaoMain.rule[2]++;
-			}
-			if (rule3) {
-				ChuBaoMain.rule[3]++;
-			}
-			if (rule5) {
-				ChuBaoMain.rule[5]++;
-			}
-			if (rule6) {
-				ChuBaoMain.rule[6]++;
-			}
-			if (rule7) {
-				ChuBaoMain.rule[7]++;
-			}
-			if (rule8) {
-				ChuBaoMain.rule[8]++;
-			}
-			if (rule9) {
-				ChuBaoMain.rule[9]++;
-			}
-
-
 			//DEBUG模式输出规则是否命中
 			if(ChubaoJobConfig.isDebugMode()){
+				if (rule){
+					Main.rule[0]++;
+				}
+				if (rule1) {
+					Main.rule[1]++;
+				}
+				if (rule2) {
+					Main.rule[2]++;
+				}
+				if (rule3) {
+					Main.rule[3]++;
+				}
+				if (rule5) {
+					Main.rule[5]++;
+				}
+				if (rule6) {
+					Main.rule[6]++;
+				}
+				if (rule7) {
+					Main.rule[7]++;
+				}
+				if (rule8) {
+					Main.rule[8]++;
+				}
+				if (rule9) {
+					Main.rule[9]++;
+				}
 			    finalObj.put("rule1", rule1);
 			    finalObj.put("rule2", rule2);
 			    finalObj.put("rule3", resultObj.get("rule_type"));
@@ -200,6 +201,8 @@ public class JugementJob extends BaseJob {
 			    finalObj.put("rule7", rule7);
                 finalObj.put("rule8", rule8);
                 finalObj.put("rule9", rule9);
+
+				finalObj.put("pass", rule);
             }
 			return rule;
 		}
@@ -247,12 +250,15 @@ public class JugementJob extends BaseJob {
 		// 读取静态缓存的费率配置文件
 		job.addCacheFile(ChubaoJobConfig.getConfigPath("rate-config.txt").toUri());
         // 输入路径
-		FileInputFormat.addInputPath(job, tempPaths.get(CallLogJob002.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob002.class.getName()));
+		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob003.class.getName()));
+		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob004.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob006.class.getName()));
 //		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob0042.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob007.class.getName()));
+		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob008.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(LargeIndicatorJob006.class.getName()));
+		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob010.class.getName()));
 
 		// 输出路径
 		Path outputFile= ChubaoJobConfig.getOutputPath("small");
@@ -267,8 +273,9 @@ public class JugementJob extends BaseJob {
 
 	@Override
 	public final HashSet<String> getDependingJobNames() {
-		return Sets.newHashSet(CallLogJob002.class.getName(), IndicatorJob002.class.getName(),
-				IndicatorJob006.class.getName(), IndicatorJob0042.class.getName(), IndicatorJob007.class.getName(),
-				LargeIndicatorJob006.class.getName());
+		return Sets.newHashSet(IndicatorJob002.class.getName(), IndicatorJob003.class.getName(),
+				IndicatorJob004.class.getName(), IndicatorJob006.class.getName(), /*IndicatorJob0042.class.getName(),*/
+				IndicatorJob007.class.getName(), IndicatorJob008.class.getName(), LargeIndicatorJob006.class.getName(),
+				IndicatorJob010.class.getName());
 	}
 }

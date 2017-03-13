@@ -33,7 +33,7 @@
                         <manifest> 
                          	<addClasspath>true</addClasspath>
                          	<classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.niuwa.hadoop.chubao.ChuBaoMain</mainClass>
+                            <mainClass>com.niuwa.hadoop.chubao.Main</mainClass>
                         </manifest>  
                     </archive>  
                     <descriptorRefs>  
@@ -71,7 +71,7 @@
  				  </artifactSet>
 <!-- 	 			  <transformers>
 	                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-	                  <mainClass>com.niuwa.hadoop.chubao.ChuBaoMain</mainClass>
+	                  <mainClass>com.niuwa.hadoop.chubao.Main</mainClass>
 	                </transformer>
 	              </transformers> -->
 	            </configuration>

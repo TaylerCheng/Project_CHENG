@@ -27,8 +27,8 @@ import com.niuwa.hadoop.util.HadoopUtil;
 
 /**
  * 
- * map:		CallLogMapper
- * reduce: 	CallLogReducer
+ * map:		UserIdMapper
+ * reduce: 	Sum1Reducer
  * input: 	job1的输出
  * output[format json]：
  *		user_id：用户唯一标识
@@ -87,17 +87,17 @@ public class IndicatorJob004 extends BaseJob {
 			//呼叫最大数的手机号集合
 			String maxContactPhone= "";
 			Boolean maxContactPhoneStatus= false;
-
+			
 			//
 			List<Integer> top5Call= new ArrayList<Integer>();
-
+			
 			Comparator<Integer> comparator= new Comparator<Integer>() {
 				@Override
 				public int compare(Integer o1, Integer o2) {
 					return o1-o2;
-				}
+				}				
 			};
-
+			
 			for (Text val : values) {
 				String vals[] = val.toString().split("\t");
 				//单个手机呼叫数
@@ -105,7 +105,7 @@ public class IndicatorJob004 extends BaseJob {
 				sum += sum_part;
 				Boolean b = new Boolean(vals[2]);
 				int call_type_1_sum= Integer.parseInt(vals[3]);
-
+				
 				// 号码记为true，排除总呼出数=1的号码
 				if (b.booleanValue() && call_type_1_sum>1) {
 					trueNumSum++;
@@ -114,7 +114,7 @@ public class IndicatorJob004 extends BaseJob {
 				if (call_type_1_sum>1) {
 					numSum++;
 				}
-
+				
 				if(maxSum<sum_part){
 					maxSum=sum_part;
 					maxContactPhone= vals[0];
@@ -123,8 +123,8 @@ public class IndicatorJob004 extends BaseJob {
 				if(maxSum==sum_part){
 					maxContactPhoneStatus= maxContactPhoneStatus||b;
 				}
-
-
+				
+				
 				top5Call.add(sum_part);
 				Collections.sort(top5Call, comparator);
 				if(top5Call.size() > 5){
@@ -137,24 +137,24 @@ public class IndicatorJob004 extends BaseJob {
 				for(Integer mapkey : top5Call){
 					top5sum+=mapkey;
 				}
-
+				
 				double call_top5_perct_type=(double)top5sum/sum;
-
+				
 				double call_true_rate_type=(double)trueNumSum/numSum;
-
+				
 				//call_true_rate_type<0.3为无效
 				if(call_true_rate_type>=0.3){
 					//输出结果为   userid	call_true_rate_type	 max_contact_call	call_top5_perct_type
 					outObj.put("user_id", key.toString());
 					outObj.put("call_true_rate_type", call_true_rate_type);
-					outObj.put("call_out_6_month_sum", numSum);
+					outObj.put("call_out_6_month_sum", numSum);					
 					outObj.put("call_out_true_6_month_sum", trueNumSum);
 					outObj.put("max_contact_call", maxContactPhoneStatus);
 					outObj.put("max_contact_call_number", maxContactPhone);
 					outObj.put("call_top5_perct_type", call_top5_perct_type);
 					outObj.put("total_call", sum);
 					outObj.put("top5sum_call", top5sum);
-
+					
 					outValue.set(outObj.toJSONString());
 					context.write(NullWritable.get(), outValue);
 				}
