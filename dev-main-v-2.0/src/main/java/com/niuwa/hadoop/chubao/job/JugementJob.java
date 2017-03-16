@@ -250,15 +250,12 @@ public class JugementJob extends BaseJob {
 		// 读取静态缓存的费率配置文件
 		job.addCacheFile(ChubaoJobConfig.getConfigPath("rate-config.txt").toUri());
         // 输入路径
+		FileInputFormat.addInputPath(job, tempPaths.get(CallLogJob002.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob002.class.getName()));
-		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob003.class.getName()));
-		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob004.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob006.class.getName()));
 //		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob0042.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob007.class.getName()));
-		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob008.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(LargeIndicatorJob006.class.getName()));
-		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob010.class.getName()));
 
 		// 输出路径
 		Path outputFile= ChubaoJobConfig.getOutputPath("small");
@@ -273,9 +270,7 @@ public class JugementJob extends BaseJob {
 
 	@Override
 	public final HashSet<String> getDependingJobNames() {
-		return Sets.newHashSet(IndicatorJob002.class.getName(), IndicatorJob003.class.getName(),
-				IndicatorJob004.class.getName(), IndicatorJob006.class.getName(), /*IndicatorJob0042.class.getName(),*/
-				IndicatorJob007.class.getName(), IndicatorJob008.class.getName(), LargeIndicatorJob006.class.getName(),
-				IndicatorJob010.class.getName());
+		return Sets.newHashSet(CallLogJob002.class.getName(), IndicatorJob002.class.getName(),
+				IndicatorJob006.class.getName(), IndicatorJob007.class.getName(), LargeIndicatorJob006.class.getName());
 	}
 }

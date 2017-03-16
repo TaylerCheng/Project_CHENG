@@ -110,25 +110,26 @@ public class CallLogJob001 extends BaseJob{
 							hang_up_flag = true;
 						}
 					}
-
-					//原IndicatorJob009指标计算
-					int callDuration = callLog.getIntValue("call_duration");//通话时长
-					int callType = callLog.getIntValue("call_type");//通话类型	0:被叫 1:主叫
-					ttl_cnt++;
-					if (callDuration > 0) {
-						connected_call_sum++;
-						total_call_time += callDuration;
-					}
-					if (CallTypeEnum.CALLING.getId() == callType) {
-						calling_sum++;
-					} else if (CallTypeEnum.CALLED.getId() == callType) {
-						called_sum++;
-						if (callDuration > 0) {
-							connected_called_sum++;
-						}
-					}
-					contact_flag = contact_flag || call_contact;
 				}
+
+				//原IndicatorJob009指标计算
+				int callDuration = callLog.getIntValue("call_duration");//通话时长
+				int callType = callLog.getIntValue("call_type");//通话类型	0:被叫 1:主叫
+				ttl_cnt++;
+				if (callDuration > 0) {
+					connected_call_sum++;
+					total_call_time += callDuration;
+				}
+				if (CallTypeEnum.CALLING.getId() == callType) {
+					calling_sum++;
+				} else if (CallTypeEnum.CALLED.getId() == callType) {
+					called_sum++;
+					if (callDuration > 0) {
+						connected_called_sum++;
+					}
+				}
+				contact_flag = contact_flag || call_contact;
+
 			}
 			//原IndicatorJob001输出
 			outObj.put("call_sum",call_sum);
@@ -146,7 +147,7 @@ public class CallLogJob001 extends BaseJob{
 			OtherPhoneSegmentEnum segementEnum = computeOtherPhoneSegement(ttl_cnt, connected_call_sum,
 					calling_sum, called_sum, connected_called_sum, total_call_time,
 					contact_flag);
-			outObj.put("calling_sum",calling_sum);
+			outObj.put("ttl_cnt",ttl_cnt);
 			outObj.put("other_phone_segement",segementEnum.getSegment());
 
 			String[] keys = key.toString().split("\t");
@@ -181,16 +182,16 @@ public class CallLogJob001 extends BaseJob{
 		 */
 		private OtherPhoneSegmentEnum computeOtherPhoneSegement(int ttl_cnt, int connected_call_sum, int calling_sum, int called_sum,
 				int connected_called_sum, Long total_call_time, boolean contact_flag) {
-			if (calling_sum > 0 && called_sum >= 0 && contact_flag) {
+			if (calling_sum > 0 && called_sum > 0 && contact_flag) {
 				double connect_rate = 1.0 * connected_call_sum / ttl_cnt;//接通次数占比=接通次数/通话次数
-				double call_in_connect_rate = 1.0 * connected_call_sum / called_sum; //拨入接通次数占比=拨入接通次数/拨入次数
+				double call_in_connect_rate = 1.0 * connected_called_sum / called_sum; //拨入接通次数占比=拨入接通次数/拨入次数
 				int mean_call_duration = 0;
 				if (connected_call_sum>0) {
 					mean_call_duration = (int) (total_call_time / connected_call_sum);    //平均通话时长=总通话时长/接通次数
 				}
 				if (connect_rate >= 0.5) {
 					if (call_in_connect_rate >= 0.6) {
-						if (connected_called_sum < 50) {
+						if (ttl_cnt < 50) {
 							return OtherPhoneSegmentEnum.GOOD;
 						} else {
 							if (mean_call_duration >= 90) {

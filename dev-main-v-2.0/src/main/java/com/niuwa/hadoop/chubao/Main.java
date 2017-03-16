@@ -36,7 +36,7 @@ public class Main {
 	private static final Logger log= LoggerFactory.getLogger(Main.class);
 	
 	public static void main(String[] args) throws Exception {
-		HadoopUtil.isWinOrLiux();
+//		HadoopUtil.isWinOrLiux();
 
 		long startTime = System.currentTimeMillis();
 		runJobs(args);
@@ -100,11 +100,9 @@ public class Main {
 				List<ControlledJob> successfulJobList = jobControl.getSuccessfulJobList();
 				for (ControlledJob controlledJob : successfulJobList) {
 					Job job = controlledJob.getJob();
-					Counters counters = job.getCounters();
-					Counter counter1 = counters.findCounter(JobCounter.MILLIS_MAPS);
-					Counter counter2 = counters.findCounter(JobCounter.MILLIS_REDUCES);
-					System.out.println(job.getJobName() + ":"+counter1.getValue() );
-					System.out.println(job.getJobName() + ":"+counter2.getValue() );
+					long startTime = job.getStartTime();
+					long finishTime = job.getFinishTime();
+					System.out.println();
 				}
 //				System.out.println(jobControl.getSuccessfulJobList());
 				jobControl.stop();
@@ -119,12 +117,9 @@ public class Main {
 		List<String> allJobsTobeRun = null;
 		
 		if(params.isSmall()) {
-			allJobsTobeRun = Lists.newArrayList(IndicatorJob001.class.getName(), IndicatorJob002.class.getName(),
-					IndicatorJob003.class.getName(), IndicatorJob004.class.getName(), IndicatorJob005.class.getName(),
-					IndicatorJob006.class.getName(), IndicatorJob007.class.getName(), IndicatorJob008.class.getName(),
-					LargeIndicatorJob006.class.getName(), IndicatorJob009.class.getName(),
-					IndicatorJob010.class.getName(), JugementJob.class.getName());
-//			allJobsTobeRun = Lists.newArrayList(IndicatorJob009.class.getName(), IndicatorJob010.class.getName());
+			allJobsTobeRun = Lists.newArrayList(CallLogJob001.class.getName(), CallLogJob002.class.getName(),
+					IndicatorJob002.class.getName(), IndicatorJob005.class.getName(), IndicatorJob006.class.getName(),
+					IndicatorJob007.class.getName(), LargeIndicatorJob006.class.getName(), JugementJob.class.getName());
 		}else{
 			allJobsTobeRun = Lists.newArrayList(LargeIndicatorJob001.class.getName(), LargeIndicatorJob002.class.getName(),
 					LargeIndicatorJob003.class.getName(), LargeIndicatorJob004.class.getName(), LargeIndicatorJob005.class.getName(),

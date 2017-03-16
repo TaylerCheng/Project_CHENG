@@ -69,9 +69,9 @@ public class CallLogJob002 extends BaseJob {
 			int hang_up_calls_not_in_contact_num = 0;//通讯录外手机通话曾挂断总号码数
 
 			//原IndicatorJob010计算字段
-			int good_calling_sum = 0;//好电话拨打次数
-			int bad_calling_sum = 0;//坏电话拨打次数
-			int total_calling_sum = 0;//总拨打次数
+			int good_call_sum = 0;//好电话拨打次数
+			int bad_call_sum = 0;//坏电话拨打次数
+			int total_ttl_cnt = 0;//总拨打次数
 
 			for (Text value : values) {
 				JSONObject callLog = JSONObject.parseObject(value.toString());
@@ -119,13 +119,13 @@ public class CallLogJob002 extends BaseJob {
 				}
 
 				//4、原IndicatorJob010
-				int calling_sum = callLog.getIntValue("calling_sum");
+				int ttl_cnt = callLog.getIntValue("ttl_cnt");
 				String other_phone_segement = callLog.getString("other_phone_segement");
-				total_calling_sum += calling_sum;
+				total_ttl_cnt += ttl_cnt;
 				if (OtherPhoneSegmentEnum.GOOD.getSegment().equals(other_phone_segement)) {
-					good_calling_sum += calling_sum;
+					good_call_sum += ttl_cnt;
 				} else if (OtherPhoneSegmentEnum.BAD.getSegment().equals(other_phone_segement)) {
-					bad_calling_sum += calling_sum;
+					bad_call_sum += ttl_cnt;
 				}
 
 			}
@@ -169,9 +169,9 @@ public class CallLogJob002 extends BaseJob {
 			//原IndicatorJob010输出
 			double good_cnt_rate = 0.0;//好电话拨打次数占比（好电话拨打次数/总拨打次数）
 			double bad_cnt_rate = 0.0;//坏电话拨打次数占比（坏电话拨打次数/总拨打次数）
-			if (total_calling_sum > 0) {
-				good_cnt_rate = 1.0 * good_calling_sum / total_calling_sum;
-				bad_cnt_rate = 1.0 * bad_calling_sum / total_calling_sum;
+			if (total_ttl_cnt > 0) {
+				good_cnt_rate = 1.0 * good_call_sum / total_ttl_cnt;
+				bad_cnt_rate = 1.0 * bad_call_sum / total_ttl_cnt;
 			}
 			outObj.put("good_cnt_rate",good_cnt_rate);
 			outObj.put("bad_cnt_rate",bad_cnt_rate);
