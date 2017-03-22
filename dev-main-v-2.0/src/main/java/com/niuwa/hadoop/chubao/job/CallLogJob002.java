@@ -2,12 +2,10 @@ package com.niuwa.hadoop.chubao.job;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
-import com.niuwa.hadoop.chubao.ChubaoJobConfig;
 import com.niuwa.hadoop.chubao.NiuwaMapper;
 import com.niuwa.hadoop.chubao.NiuwaReducer;
 import com.niuwa.hadoop.chubao.RunParams;
 import com.niuwa.hadoop.chubao.enums.OtherPhoneSegmentEnum;
-import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -20,7 +18,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 import java.util.*;
-
 
 public class CallLogJob002 extends BaseJob {
 
@@ -186,7 +183,7 @@ public class CallLogJob002 extends BaseJob {
 	@Override
 	public void setJobSpecialInfo(Job job, Configuration conf,
 			RunParams params,
-			Map<String, Path> tempPaths) throws Exception{
+			Map<String, Path> tempPaths) throws Exception {
 
 		job.setMapperClass(CallLogJob002.CallLogMapper.class);
 		job.setReducerClass(CallLogJob002.CallLogReducer.class);

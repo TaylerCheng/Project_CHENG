@@ -51,6 +51,7 @@ public class IndicatorJob006 extends BaseJob {
                 resultObj.put("user_id", loan.getString("user_id"));
                 resultObj.put("loan_out_day", loan.getInteger("loan_out_day"));// 逾期天数,小额没有最大逾期记录，所以比较该值取最大
                 resultObj.put("loan_repay_status", loan.getString("loan_repay_status"));// 还款状态
+                resultObj.put("loan_check_status", loan.getString("loan_check_status"));// 审核状态
                 resultObj.put("repay_late_increate_rate", getRate(loan.getInteger("loan_out_day")));// 每笔增长额度(逾期)
                 resultObj.put("repay_nomarl_increate", getIncreseNormal(loan));// 每笔增长额度（正常）
                 context.write(new Text(loan.getString("user_id")), new Text(resultObj.toJSONString()));
@@ -71,8 +72,11 @@ public class IndicatorJob006 extends BaseJob {
 
                 //1、历史贷款信息 INPUT_LOAN-> MAP_OUT
                 String loan_repay_status = object.getString("loan_repay_status");
+                String loan_check_status = object.getString("loan_check_status");
                 if (loan_repay_status!= null) {
-                    first_flag = false;
+                    if ("s".equalsIgnoreCase(loan_check_status)) {
+                        first_flag = false;
+                    }
                     if ("s".equalsIgnoreCase(loan_repay_status)) {
                         increate_line += object.getDouble("repay_nomarl_increate");
                     } else if (("os".equalsIgnoreCase(loan_repay_status))) {
@@ -253,7 +257,7 @@ public class IndicatorJob006 extends BaseJob {
         // 输入路径
         FileInputFormat.addInputPath(job, ChubaoJobConfig.getInputPath(ChubaoJobConfig.INPUT_LOAN));
         FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob005.class.getName()));
-        FileInputFormat.addInputPath(job, tempPaths.get(CallLogJob002.class.getName()));
+        FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob008.class.getName()));
         // 输出路径
         FileOutputFormat.setOutputPath(job, tempPaths.get(IndicatorJob006.class.getName()) );
         // 删除原有的输出
@@ -264,7 +268,7 @@ public class IndicatorJob006 extends BaseJob {
     
 	@Override
 	public final HashSet<String> getDependingJobNames() {
-        return Sets.newHashSet(IndicatorJob005.class.getName(), CallLogJob002.class.getName());
+        return Sets.newHashSet(IndicatorJob005.class.getName(), IndicatorJob008.class.getName());
     }
 
 }

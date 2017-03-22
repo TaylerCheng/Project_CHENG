@@ -8,7 +8,6 @@ import com.niuwa.hadoop.chubao.NiuwaReducer;
 import com.niuwa.hadoop.chubao.RunParams;
 import com.niuwa.hadoop.chubao.enums.CallTypeEnum;
 import com.niuwa.hadoop.chubao.enums.OtherPhoneSegmentEnum;
-import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -98,17 +97,11 @@ public class IndicatorJob009 extends BaseJob{
 				}
 				contact_flag = contact_flag || callContact;
 			}
-			String[] keys = key.toString().split("\t");
-			if ("1004b0a00c79a7b2bb2968f2b08b54e9c04b85b1".equals(keys[0])) {
-				System.out.println();
-				if ("1372457****".equals(keys[1])){
-					System.out.println();
-				}
-			}
 			OtherPhoneSegmentEnum segementEnum = computeOtherPhoneSegement(ttl_cnt, connected_call_sum,
 					calling_sum, called_sum, connected_called_sum, total_call_time,
 					contact_flag);
 
+			String[] keys = key.toString().split("\t");
 			outObj.put("user_id", keys[0]);
 			outObj.put("other_phone", keys[1]);
 			outObj.put("ttl_cnt",ttl_cnt);
@@ -143,9 +136,9 @@ public class IndicatorJob009 extends BaseJob{
 			if (calling_sum > 0 && called_sum > 0 && contact_flag) {
 				double connect_rate = 1.0 * connected_call_sum / ttl_cnt;//接通次数占比=接通次数/通话次数
 				double call_in_connect_rate = 1.0 * connected_called_sum / called_sum; //拨入接通次数占比=拨入接通次数/拨入次数
-				int mean_call_duration = 0;
+				double mean_call_duration = 0;
 				if (connected_call_sum>0) {
-					mean_call_duration = (int) (total_call_time / connected_call_sum);    //平均通话时长=总通话时长/接通次数
+					mean_call_duration = 1.0 * total_call_time / connected_call_sum;    //平均通话时长=总通话时长/接通次数
 				}
 				if (connect_rate >= 0.5) {
 					if (call_in_connect_rate >= 0.6) {
@@ -159,7 +152,7 @@ public class IndicatorJob009 extends BaseJob{
 							}
 						}
 					} else {
-						if (mean_call_duration > 60) {
+						if (mean_call_duration >= 60) {
 							return OtherPhoneSegmentEnum.GOOD;
 						} else {
 							return OtherPhoneSegmentEnum.MID;

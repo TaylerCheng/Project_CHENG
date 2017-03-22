@@ -3,13 +3,10 @@ package com.niuwa.hadoop.chubao.job;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
-import com.niuwa.hadoop.chubao.ChubaoJobConfig;
 import com.niuwa.hadoop.chubao.NiuwaMapper;
 import com.niuwa.hadoop.chubao.NiuwaReducer;
 import com.niuwa.hadoop.chubao.RunParams;
-import com.niuwa.hadoop.chubao.enums.CallTypeEnum;
 import com.niuwa.hadoop.chubao.enums.OtherPhoneSegmentEnum;
-import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -63,13 +60,9 @@ public class IndicatorJob010 extends BaseJob{
 			int bad_call_sum = 0;//坏电话拨打次数
 			int total_call_sum = 0;//总拨打次数
 
-			if ("1004b0a00c79a7b2bb2968f2b08b54e9c04b85b1".equals(key.toString())){
-				System.out.println();
-			}
 			for (Text val : values) {
 				JSONObject json = JSONObject.parseObject(val.toString());
 				int ttl_cnt = json.getIntValue("ttl_cnt");
-				String other_phone = json.getString("other_phone");
 				String other_phone_segement = json.getString("other_phone_segement");
 
 				total_call_sum += ttl_cnt;
