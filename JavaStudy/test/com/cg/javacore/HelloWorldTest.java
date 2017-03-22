@@ -66,12 +66,12 @@ public class HelloWorldTest {
     public void test005() throws Exception {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH,1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        calendar.add(Calendar.DAY_OF_MONTH,-1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
         System.out.println(calendar.getTime());
     }
 
@@ -80,8 +80,8 @@ public class HelloWorldTest {
         List<String> list = new ArrayList<String>();
         list.add("1");
         list.add("2");
-//        list.add("3");
-//        list.add("4");
+        //        list.add("3");
+        //        list.add("4");
         for (String temp : list) {
             if ("1".equals(temp)) {
                 list.remove(temp);
@@ -103,7 +103,14 @@ public class HelloWorldTest {
     public void test008() throws Exception {
         String str = "程";
         System.out.println(HexUtils.toHex(str.getBytes("utf-8")));
+        System.out.println(str.startsWith(""));
+    }
 
+    @Test
+    public void test009() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -90);
+        System.out.println(calendar.getTime());
     }
 
 }

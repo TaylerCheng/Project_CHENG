@@ -6,11 +6,13 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobCounter;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -21,10 +23,17 @@ public class WordCount {
 
     public static final String JOB_NAME = "WordCountTest";
     // LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
-    public static final ExecuteMode executeMode = ExecuteMode.CLUSTER;
+    public static final ExecuteMode executeMode = ExecuteMode.LOCAL;
 
     public static void main(String[] args) throws Exception{
+        long startTime = System.currentTimeMillis();
+        boolean completed = runJob(args);
+        long endTime = System.currentTimeMillis();
+        System.out.println("耗时：" + (endTime - startTime) / 1000);
+        System.exit(completed ? 0 : 1);
+    }
 
+    private static boolean runJob(String[] args) throws Exception {
         Configuration conf = new Configuration();
         String[] otherArgs = new GenericOptionsParser(conf, args)
                 .getRemainingArgs();
@@ -34,10 +43,11 @@ public class WordCount {
         }
 
         // Section 1 init job
-        Job job = Job.getInstance(conf, JOB_NAME);
+        Job job = null;
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
-            String classpath = otherArgs[2];
             conf.set("mapreduce.job.reduces", "2");
+            job = Job.getInstance(conf, JOB_NAME);
+            String classpath = otherArgs[2];
             File jarfile = YarnJobUtil.getJobJarFile(classpath);
             if (jarfile != null) {
                 logger.warn("远程提交作业初始化jar包成功");
@@ -49,6 +59,7 @@ public class WordCount {
             }
         } else {
             conf.set("mapreduce.framework.name", "local");
+            job = Job.getInstance(conf, JOB_NAME);
             job.setJarByClass(WordCount.class);
         }
 
@@ -70,7 +81,15 @@ public class WordCount {
         TextOutputFormat.setOutputPath(job, outputPath);
 
         // Section 3 excute job
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        boolean completed = job.waitForCompletion(true);
+
+        Counters counters = job.getCounters();
+        Counter counter1 = counters.findCounter(JobCounter.MILLIS_MAPS);
+        System.out.println(counter1.getValue());
+        Counter counter2 = counters.findCounter(JobCounter.MILLIS_REDUCES);
+        System.out.println(counter2.getValue());
+        System.out.println((job.getFinishTime() - job.getStartTime()) / 1000);
+        return completed;
     }
 
 }

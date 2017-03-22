@@ -25,11 +25,20 @@ public class YarnJobUtil {
 
     private static final Logger logger = Logger.getLogger(YarnJobUtil.class);
 
+    private static File jarFile = null;
+
     public static File getJobJarFile(String classpath) throws IOException {
+        if (jarFile == null) {
+            jarFile = createTempJar(classpath);
+        }
+        return jarFile;
+    }
+
+    private static File createTempJar(String classpath) throws IOException {
         if (!new File(classpath).exists()) {
             return null;
         }
-        final File jarFile = File.createTempFile("YarnJob-", ".jar", new File(System.getProperty("java.io.tmpdir")));
+        final File tempJarFile = File.createTempFile("YarnJob-", ".jar", new File(System.getProperty("java.io.tmpdir")));
         JarOutputStream out = null;
         try {
             Manifest manifest = new Manifest();
@@ -37,11 +46,11 @@ public class YarnJobUtil {
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
-                    jarFile.delete();
+                    tempJarFile.delete();
                 }
             });
             out = new JarOutputStream(
-                    new FileOutputStream(jarFile), manifest);
+                    new FileOutputStream(tempJarFile), manifest);
             createTempJarInner(out, new File(classpath), "");
         } catch (IOException e) {
             logger.info("Init job on yarn failed.", e);
@@ -55,7 +64,7 @@ public class YarnJobUtil {
                 }
             }
         }
-        return jarFile;
+        return tempJarFile;
     }
 
     private static void createTempJarInner(JarOutputStream out, File f,

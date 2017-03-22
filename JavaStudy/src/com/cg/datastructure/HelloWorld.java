@@ -1,5 +1,5 @@
 
-package com.cg;
+package com.cg.datastructure;
 
 import java.util.*;
 
