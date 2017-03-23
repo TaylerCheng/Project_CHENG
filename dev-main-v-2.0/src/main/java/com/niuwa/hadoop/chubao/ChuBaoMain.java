@@ -1,42 +1,63 @@
 package com.niuwa.hadoop.chubao;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
-import com.niuwa.hadoop.chubao.Main;
-import com.niuwa.hadoop.chubao.job.*;
-import com.niuwa.hadoop.chubao.utils.ChubaoDateUtil;
-import com.niuwa.hadoop.util.HadoopUtil;
-import org.apache.commons.cli.Options;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
-import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.niuwa.hadoop.chubao.enums.RuleCounter;
+import com.niuwa.hadoop.chubao.job.*;
+import org.apache.commons.cli.Options;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.Counters;
+import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
+import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.niuwa.hadoop.chubao.utils.ChubaoDateUtil;
+import com.niuwa.hadoop.util.HadoopUtil;
+
 /**
  * 触宝白名单任务启动类
- * 
+ *
  * @author Administrator
  *
  */
 public class ChuBaoMain {
 
-	public static int[] rule = new int[10];
-
 	private static final Logger log= LoggerFactory.getLogger(Main.class);
-	
+
 	public static void main(String[] args) throws Exception {
 //		HadoopUtil.isWinOrLiux();
 
 		long startTime = System.currentTimeMillis();
-		runJobs(args);
+		List<ControlledJob> controlledJobs = runJobs(args);
 		long endTime = System.currentTimeMillis();
+
+		/**
+		 * 打印白名单和每条规则的通过数
+		 */
+		if (ChubaoJobConfig.isDebugMode() && controlledJobs != null) {
+			log.info("\n" + controlledJobs.toString());
+			for (ControlledJob controlledJob : controlledJobs) {
+				if (controlledJob.getJobName().equals(NewJugementJob.class.getName())) {
+					Counters counters = controlledJob.getJob().getCounters();
+					log.info("white list passed:[{}]", counters.findCounter(RuleCounter.RULE_PASS).getValue());
+					log.info("rule-1 passed:[{}]", counters.findCounter(RuleCounter.RULE_1).getValue());
+					log.info("rule-2 passed:[{}]", counters.findCounter(RuleCounter.RULE_2).getValue());
+					log.info("rule-3 passed:[{}]", counters.findCounter(RuleCounter.RULE_3).getValue());
+					log.info("rule-5 passed:[{}]", counters.findCounter(RuleCounter.RULE_5).getValue());
+					log.info("rule-6 passed:[{}]", counters.findCounter(RuleCounter.RULE_6).getValue());
+					log.info("rule-7 passed:[{}]", counters.findCounter(RuleCounter.RULE_7).getValue());
+					log.info("rule-8 passed:[{}]", counters.findCounter(RuleCounter.RULE_8).getValue());
+					log.info("rule-9 passed:[{}]", counters.findCounter(RuleCounter.RULE_9).getValue());
+				}
+			}
+		}
 
 		log.info("[共耗时]:{}(s)", (endTime - startTime) / 1000);
 		log.info("[isDebugMode]{}", ChubaoJobConfig.isDebugMode());
@@ -44,23 +65,16 @@ public class ChuBaoMain {
 				new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ChubaoDateUtil.dataLastedTime.getTime()));
 		log.info("[job params]{}", JSONObject.toJSONString(args));
 
-		if (ChubaoJobConfig.isDebugMode()) {
-			log.info("white list passed:[{}]", rule[0]);
-			for (int i = 1; i < rule.length; i++) {
-				log.info("rule-" + i + " passed:[{}]", rule[i]);
-			}
-		}
-
 	}
 
-	private static void runJobs(String[] args) throws Exception {
+	private static List<ControlledJob> runJobs(String[] args) throws Exception {
 		//生成命令行解析参数
 		Options options = ChubaoCommandLine.buildOptions();
 		//解析输入的命令行参数
 		RunParams params = new RunParams();
 		boolean isSuc = ChubaoCommandLine.parse(args, options, params);
 		if(!isSuc){
-			return;
+			return null;
 		}
 
 		//初始化触宝全局配置
@@ -93,10 +107,8 @@ public class ChuBaoMain {
 		jobControlThread.start();
 		while (true) {
 			if (jobControl.allFinished()) {
-				List<ControlledJob> successfulJobList = jobControl.getSuccessfulJobList();
-				System.out.println(jobControl.getSuccessfulJobList());
 				jobControl.stop();
-				break;
+				return jobControl.getSuccessfulJobList();
 			}
 		}
 	}
@@ -105,21 +117,20 @@ public class ChuBaoMain {
 	//每个元素为对应job的类名
 	private static List<String> getAllJobsToBeRun(RunParams params){
 		List<String> allJobsTobeRun = null;
-		
+
 		if(params.isSmall()) {
-//			allJobsTobeRun = Lists.newArrayList(CallLogJob001.class.getName(), CallLogJob002.class.getName(),
-//					IndicatorJob002.class.getName(), IndicatorJob005.class.getName(), NewIndicatorJob006.class.getName(),
-//					IndicatorJob007.class.getName(), LargeIndicatorJob006.class.getName(), NewJugementJob.class.getName());
-			allJobsTobeRun = Lists.newArrayList(CallLogJob001.class.getName());
+			allJobsTobeRun = Lists.newArrayList(CallLogJob001.class.getName(), CallLogJob002.class.getName(),
+					IndicatorJob002.class.getName(), IndicatorJob005.class.getName(), NewIndicatorJob006.class.getName(),
+					IndicatorJob007.class.getName(), LargeIndicatorJob006.class.getName(), NewJugementJob.class.getName());
 		}else{
 			allJobsTobeRun = Lists.newArrayList(LargeIndicatorJob001.class.getName(), LargeIndicatorJob002.class.getName(),
 					LargeIndicatorJob003.class.getName(), LargeIndicatorJob004.class.getName(), LargeIndicatorJob005.class.getName(),
 					LargeIndicatorJob006.class.getName(),
 					LargeJugementJob.class.getName());
 		}
-		
+
 		return allJobsTobeRun;
 	}
-	
+
 
 }

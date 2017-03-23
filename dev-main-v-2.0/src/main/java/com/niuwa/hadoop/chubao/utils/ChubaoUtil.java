@@ -2,6 +2,7 @@ package com.niuwa.hadoop.chubao.utils;
 
 import java.util.regex.Pattern;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 
 public class ChubaoUtil {
@@ -46,5 +47,18 @@ public class ChubaoUtil {
 	public static double getIntAmount(double amt){
         return Math.round(amt/100)*100;
     }
-	
+
+	public static void removeUnusedField(JSONObject callLog) {
+		callLog.remove("user_rank");//用户的触宝排名
+		callLog.remove("user_is_loan");//是否在触宝有借款
+		callLog.remove("user_geo");//用户地理位置
+		callLog.remove("device_info");//设备信息
+		callLog.remove("device_imei");//设备唯一号码
+		callLog.remove("device_os");//操作系统名
+		callLog.remove("device_os_version");//操作系统版本
+		callLog.remove("device_manufacturer");//厂商
+		callLog.remove("name");//对应demo数据中的name
+		callLog.remove("call_tag");//对应demo数据中的tag
+	}
+
 }

@@ -17,6 +17,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.Lz4Codec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -34,12 +35,16 @@ public class CallLogJob001 extends BaseJob {
 
     public static class CallLogMapper extends NiuwaMapper<LongWritable, Text, Text, Text> {
         private Text outKey = new Text();
+        private Text outValue = new Text();
 
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+
             JSONObject callLog = JSONObject.parseObject(value.toString());
             String user_id = callLog.getString("user_id");
             String other_phone = callLog.getString("other_phone");
+            ChubaoUtil.removeUnusedField(callLog);
             outKey.set(user_id + "\t" + other_phone);
+            outValue.set(callLog.toJSONString());
             context.write(outKey, value);
         }
 
@@ -214,6 +219,12 @@ public class CallLogJob001 extends BaseJob {
     @Override
     public void setJobSpecialInfo(Job job, Configuration conf, RunParams params, Map<String, Path> tempPaths)
             throws Exception {
+        if (ChubaoJobConfig.isDebugMode()){
+            Configuration configuration = job.getConfiguration();
+            configuration.setBoolean("mapred.compress.map.output.",true);//对map输出进行压缩
+            configuration.set(" mapreduce.map.output.compress.codec",Lz4Codec.class.getName());//对map输出进行压缩的Codec
+            configuration.setLong("mapreduce.input.fileinputformat.split.minsize", 2 * 134217728 );// 128Mb = 134217728
+        }
 
         job.setMapperClass(CallLogJob001.CallLogMapper.class);
         job.setReducerClass(CallLogJob001.CallLogReducer.class);

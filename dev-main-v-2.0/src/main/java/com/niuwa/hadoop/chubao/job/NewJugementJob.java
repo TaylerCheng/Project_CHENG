@@ -1,10 +1,15 @@
 package com.niuwa.hadoop.chubao.job;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URI;
+import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.Map;
+
 import com.niuwa.hadoop.chubao.*;
-import com.niuwa.hadoop.chubao.rules.Rules;
-import com.niuwa.hadoop.util.HadoopUtil;
+import com.niuwa.hadoop.chubao.enums.RuleCounter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -15,17 +20,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URI;
-import java.text.DecimalFormat;
-import java.util.HashSet;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Sets;
+import com.niuwa.hadoop.chubao.rules.Rules;
+import com.niuwa.hadoop.util.HadoopUtil;
 /**
- * 
- * 小额指标合并过滤任务<br> 
+ *
+ * 小额指标合并过滤任务<br>
  * 联合过滤规则和判断条件，输出最终白名单结果：
  * 输出结果：
  * user_id：用户唯一标识
@@ -117,22 +118,25 @@ public class NewJugementJob extends BaseJob {
 				}
 			}
 
-			boolean rule = JudgeRules(resultObj);
-            //DEBUG输出符合规则和不符合规则的；非DEBUG，只输出符合规则的
-            if(ChubaoJobConfig.isDebugMode() || rule){
+			boolean rule = JudgeRules(resultObj,context);
+			//DEBUG输出符合规则和不符合规则的；非DEBUG，只输出符合规则的
+			if(ChubaoJobConfig.isDebugMode() || rule){
 				finalObj.put("user_id", key.toString());
 				finalObj.put("type", 1);
-				//可借款最终金额
-				finalObj.put("amount", Double.parseDouble(df2.format(resultObj.getDouble("final_amount"))));
-				finalObj.put("prod_rate",
-						Double.parseDouble(df.format(baseRateRecord.getDouble("base_prod_rate"))));//APR
-				finalObj.put("daily_fee_rate",
-						Double.parseDouble(df.format(baseRateRecord.getDouble("daily_fee_rate"))));// 日手续费
-				finalObj.put("monthly_fee_rate",
-						Double.parseDouble(df.format(baseRateRecord.getDouble("base_month_fee_rate") + 0)));// 月手续费
-				finalObj.put("base_fee_rate",
-						Double.parseDouble(df.format(resultObj.getDouble("base_fee_rate"))));// 基本手续费
-
+				try {
+					//可借款最终金额
+					finalObj.put("amount", Double.parseDouble(df2.format(resultObj.getDouble("final_amount"))));
+					finalObj.put("prod_rate",
+							Double.parseDouble(df.format(baseRateRecord.getDouble("base_prod_rate"))));//APR
+					finalObj.put("daily_fee_rate",
+							Double.parseDouble(df.format(baseRateRecord.getDouble("daily_fee_rate"))));// 日手续费
+					finalObj.put("monthly_fee_rate",
+							Double.parseDouble(df.format(baseRateRecord.getDouble("base_month_fee_rate") + 0)));// 月手续费
+					finalObj.put("base_fee_rate",
+							Double.parseDouble(df.format(resultObj.getDouble("base_fee_rate"))));// 基本手续费
+				}catch (Exception e){
+					log.error("Parse prejob result error,resultObj = " + resultObj, e);
+				}
                 /*输出结果：
                 user_id：用户唯一标识
                 type:1:小额，2:大额
@@ -147,7 +151,7 @@ public class NewJugementJob extends BaseJob {
 
 		}
 
-		private boolean JudgeRules(JSONObject resultObj) {
+		private boolean JudgeRules(JSONObject resultObj, Context context) {
 			boolean rule1 = Rules.isMatchedRule_1(resultObj.getLong("device_activation"));
 			boolean rule2 = Rules.isMatchedRule_2(resultObj.getInteger("call_num_3_month"));
 			boolean rule3 = Rules.rule3(resultObj);
@@ -164,33 +168,33 @@ public class NewJugementJob extends BaseJob {
 			boolean rule = rule1 && rule2 && rule3 && rule5 && rule6 && rule7 && rule8 && rule9;
 
 			//DEBUG模式输出规则是否命中
-			if(ChubaoJobConfig.isDebugMode()){
-				if (rule){
-					ChuBaoMain.rule[0]++;
+			if(ChubaoJobConfig.isDebugMode()) {
+				if (rule) {
+					context.getCounter(RuleCounter.RULE_PASS).increment(1);
 				}
 				if (rule1) {
-					ChuBaoMain.rule[1]++;
+					context.getCounter(RuleCounter.RULE_1).increment(1);
 				}
 				if (rule2) {
-					ChuBaoMain.rule[2]++;
+					context.getCounter(RuleCounter.RULE_2).increment(1);
 				}
 				if (rule3) {
-					ChuBaoMain.rule[3]++;
+					context.getCounter(RuleCounter.RULE_3).increment(1);
 				}
 				if (rule5) {
-					ChuBaoMain.rule[5]++;
+					context.getCounter(RuleCounter.RULE_5).increment(1);
 				}
 				if (rule6) {
-					ChuBaoMain.rule[6]++;
+					context.getCounter(RuleCounter.RULE_6).increment(1);
 				}
 				if (rule7) {
-					ChuBaoMain.rule[7]++;
+					context.getCounter(RuleCounter.RULE_7).increment(1);
 				}
 				if (rule8) {
-					ChuBaoMain.rule[8]++;
+					context.getCounter(RuleCounter.RULE_8).increment(1);
 				}
 				if (rule9) {
-					ChuBaoMain.rule[9]++;
+					context.getCounter(RuleCounter.RULE_9).increment(1);
 				}
 			    finalObj.put("rule1", rule1);
 			    finalObj.put("rule2", rule2);
@@ -246,7 +250,7 @@ public class NewJugementJob extends BaseJob {
 		job.setReducerClass(NewJugementJob.ReduceObj.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
-	
+
 		// 读取静态缓存的费率配置文件
 		job.addCacheFile(ChubaoJobConfig.getConfigPath("rate-config.txt").toUri());
         // 输入路径
@@ -264,7 +268,7 @@ public class NewJugementJob extends BaseJob {
 		FileOutputFormat.setOutputPath(job, outputFile);
 		// 删除原有的输出
 		HadoopUtil.deleteOutputFile(outputFile);
-		
+
 	}
 
 	@Override
