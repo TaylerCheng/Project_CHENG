@@ -19,6 +19,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.net.URI;
 
 public class WordCount extends Configured implements Tool {
 
@@ -52,10 +53,10 @@ public class WordCount extends Configured implements Tool {
             String classpath = otherArgs[2];
             File jarfile = YarnJobUtil.getJobJarFile(classpath);
             if (jarfile != null) {
-                logger.warn("远程提交作业初始化jar包成功");
+                logger.warn("初始化jar包成功");
                 job.setJar(jarfile.toString());
             } else {
-                logger.warn("远程提交作业初始化jar包失败，改为本地运行");
+                logger.warn("初始化jar包失败，改为本地运行");
                 conf.set("mapreduce.framework.name", "local");
                 job.setJarByClass(WordCount.class);
             }
@@ -81,6 +82,9 @@ public class WordCount extends Configured implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         TextOutputFormat.setOutputPath(job, outputPath);
+
+        job.setNumReduceTasks(4);
+        job.addCacheFile(new URI("hdfs://192.168.101.219:9000/user/root/test/cache/cache_file.txt#CHENGTEST"));
 
         // Section 3 excute job
         return job.waitForCompletion(true) ? 0 : 1;
