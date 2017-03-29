@@ -70,7 +70,7 @@ public class WordCount extends Configured implements Tool {
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
-        job.setPartitionerClass(MyPartitioner.class);
+
         job.setInputFormatClass(TextInputFormat.class);
         TextInputFormat.addInputPath(job, new Path(otherArgs[0]));
         Path outputPath = new Path(otherArgs[1]);
@@ -82,9 +82,7 @@ public class WordCount extends Configured implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         TextOutputFormat.setOutputPath(job, outputPath);
-
         job.setNumReduceTasks(4);
-        job.addCacheFile(new URI("hdfs://192.168.101.219:9000/user/root/test/cache/cache_file.txt#CHENGTEST"));
 
         // Section 3 excute job
         return job.waitForCompletion(true) ? 0 : 1;

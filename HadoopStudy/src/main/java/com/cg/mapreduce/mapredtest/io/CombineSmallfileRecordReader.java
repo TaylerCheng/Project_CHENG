@@ -1,4 +1,4 @@
-package com.cg.mapreduce.wordcount;
+package com.cg.mapreduce.mapredtest.io;
 
 import java.io.IOException;
 

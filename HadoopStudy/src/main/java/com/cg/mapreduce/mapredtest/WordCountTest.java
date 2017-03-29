@@ -3,6 +3,7 @@ package com.cg.mapreduce.mapredtest;
 import com.cg.mapreduce.utils.YarnJobUtil;
 import com.cg.mapreduce.wordcount.ExecuteMode;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -10,47 +11,59 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobCounter;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URI;
 
-public class WordCountTest {
+public class WordCountTest extends Configured implements Tool {
 
     public static Logger logger = Logger.getLogger(WordCountTest.class);
 
     public static final String JOB_NAME = "WordCountTest";
-    /**
-     * LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
-     */
-    public static final ExecuteMode executeMode = ExecuteMode.CLUSTER;
+    // LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
+    public static final ExecuteMode executeMode = ExecuteMode.LOCAL;
 
     public static void main(String[] args) throws Exception {
+        long startTime = System.currentTimeMillis();
+        int success = ToolRunner.run(new WordCountTest(), args);
+        long endTime = System.currentTimeMillis();
+        System.out.println("耗时：" + (endTime - startTime) / 1000);
+        System.exit(success);
+    }
 
-        Configuration conf = new Configuration();
-        String[] otherArgs = new GenericOptionsParser(conf, args)
-                .getRemainingArgs();
-        if (otherArgs.length < 3) {
-            logger.error("parameters should >= 3");
+    @Override
+    public int run(String[] otherArgs) throws Exception {
+        if (otherArgs.length < 2) {
+            logger.error("parameters should >= 2");
             System.exit(2);
         }
 
         // Section 1 init job
-        Job job =Job.getInstance(conf, JOB_NAME);
+        Configuration conf = getConf();
+        Job job = null;
         if (executeMode.equals(ExecuteMode.CLUSTER)) {
-            String classpath = otherArgs[0];
-            conf.set("mapred.reduce.tasks", "2");
-            //弃用uber模式，重用JVM
-            conf.set("mapreduce.job.ubertask.enable","true");
-            File jobJarFile = YarnJobUtil.getJobJarFile(classpath);
-            job.setJar(jobJarFile.toString());
+            conf.set("mapreduce.job.reduces", "3");
+            job = Job.getInstance(conf, JOB_NAME);
+            String classpath = otherArgs[2];
+            File jarfile = YarnJobUtil.getJobJarFile(classpath);
+            if (jarfile != null) {
+                logger.warn("初始化jar包成功");
+                job.setJar(jarfile.toString());
+            } else {
+                logger.warn("初始化jar包失败，改为本地运行");
+                conf.set("mapreduce.framework.name", "local");
+                job.setJarByClass(WordCountTest.class);
+            }
         } else {
-            //设置为本地运行
             conf.set("mapreduce.framework.name", "local");
-            //            conf.set("mapred.reduce.tasks", "2");
+            job = Job.getInstance(conf, JOB_NAME);
             job.setJarByClass(WordCountTest.class);
         }
 
@@ -58,11 +71,10 @@ public class WordCountTest {
         job.setMapperClass(TokenizerMapper.class);
         //        job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
-        //        job.setPartitionerClass(MyPartitioner.class);
-
+        job.setPartitionerClass(MyPartitioner.class);
         job.setInputFormatClass(TextInputFormat.class);
-        TextInputFormat.addInputPath(job, new Path(otherArgs[1]));
-        Path outputPath = new Path(otherArgs[2]);
+        TextInputFormat.addInputPath(job, new Path(otherArgs[0]));
+        Path outputPath = new Path(otherArgs[1]);
         FileSystem fs = outputPath.getFileSystem(conf);
         if (fs.exists(outputPath)) {
             fs.delete(outputPath, true);
@@ -72,16 +84,11 @@ public class WordCountTest {
         job.setOutputValueClass(IntWritable.class);
         TextOutputFormat.setOutputPath(job, outputPath);
 
-        job.addCacheFile(new URI("hdfs://master.hadoop:9000/test/cache/MyCounter.properties"));
+        job.setNumReduceTasks(4);
+        job.addCacheFile(new URI("hdfs://192.168.101.219:9000/user/root/test/cache/cache_file.txt#CHENGTEST"));
 
         // Section 3 excute job
-        job.waitForCompletion(true);
-        //System.exit(job.waitForCompletion(true) ? 0 : 1);
-        //生成自己的计数器
-        Counters counters = job.getCounters();
-        Counter counter = counters.findCounter(MyCounter.TEST_COUNTER);
-        long value = counter.getValue();
-        System.out.println(value);
+        return job.waitForCompletion(true) ? 0 : 1;
     }
 
 }

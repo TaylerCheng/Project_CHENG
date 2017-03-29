@@ -1,4 +1,4 @@
-package com.cg.mapreduce.mapredtest;
+package com.cg.mapreduce.mapredtest.counter;
 
 /**
  * @author： Cheng Guang

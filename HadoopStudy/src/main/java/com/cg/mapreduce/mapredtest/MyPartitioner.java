@@ -22,10 +22,8 @@ public class MyPartitioner extends Partitioner<Text, IntWritable> {
      */
     @Override
     public int getPartition(Text key, IntWritable value, int numPartitions) {
-        if (key.toString().startsWith("h")) {
-            return 0;
-        } else {
-            return 1;
-        }
+        String keyString = key.toString();
+        keyString = keyString.substring(1, keyString.length());
+        return (keyString.hashCode() & Integer.MAX_VALUE) % numPartitions;
     }
 }
