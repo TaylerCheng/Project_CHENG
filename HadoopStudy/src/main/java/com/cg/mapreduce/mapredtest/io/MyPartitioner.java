@@ -1,4 +1,4 @@
-package com.cg.mapreduce.mapredtest;
+package com.cg.mapreduce.mapredtest.io;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;

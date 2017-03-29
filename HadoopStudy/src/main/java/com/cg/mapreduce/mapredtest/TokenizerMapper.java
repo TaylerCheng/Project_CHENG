@@ -3,7 +3,6 @@ package com.cg.mapreduce.mapredtest;
 import java.io.*;
 import java.util.StringTokenizer;
 
-import com.cg.hdfs.io.MyPair;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -14,7 +13,7 @@ public class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
 	public static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
 	private final static IntWritable one = new IntWritable(1);
-	private MyPair word = new MyPair();
+	private Text word = new Text();
 
 	@Override
 	public void setup(Context context) throws IOException, InterruptedException {

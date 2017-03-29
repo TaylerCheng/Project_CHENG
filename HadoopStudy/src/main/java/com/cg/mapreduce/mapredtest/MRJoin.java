@@ -1,5 +1,7 @@
 package com.cg.mapreduce.mapredtest;
 
+import com.cg.mapreduce.mapredtest.io.GroupComparator;
+import com.cg.mapreduce.mapredtest.io.MyPair;
 import com.cg.mapreduce.mapredtest.io.MyPartitioner;
 import com.cg.mapreduce.utils.YarnJobUtil;
 import com.cg.mapreduce.wordcount.ExecuteMode;
@@ -7,7 +9,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -17,19 +19,21 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.net.URI;
 
-public class WordCountTest extends Configured implements Tool {
+/**
+ * @author： Cheng Guang
+ * @date： 2017/3/29.
+ */
+public class MRJoin extends Configured implements Tool {
+    public static Logger logger = Logger.getLogger(MRJoin.class);
 
-    public static Logger logger = Logger.getLogger(WordCountTest.class);
-
-    public static final String JOB_NAME = "WordCountTest";
+    public static final String JOB_NAME = "MRJoin";
     // LOCAL为本地执行，CLUSTER则提交到YARN集群上执行
     public static final ExecuteMode executeMode = ExecuteMode.LOCAL;
 
     public static void main(String[] args) throws Exception {
         long startTime = System.currentTimeMillis();
-        int success = ToolRunner.run(new WordCountTest(), args);
+        int success = ToolRunner.run(new MRJoin(), args);
         long endTime = System.currentTimeMillis();
         System.out.println("耗时：" + (endTime - startTime) / 1000);
         System.exit(success);
@@ -65,10 +69,10 @@ public class WordCountTest extends Configured implements Tool {
         }
 
         // Section 2 job config
-        job.setMapperClass(TokenizerMapper.class);
-        //        job.setCombinerClass(IntSumReducer.class);
-        job.setReducerClass(IntSumReducer.class);
+        job.setMapperClass(JoinMapper.class);
+        job.setReducerClass(JoinReduce.class);
         job.setPartitionerClass(MyPartitioner.class);
+        job.setGroupingComparatorClass(GroupComparator.class);
         job.setInputFormatClass(TextInputFormat.class);
         TextInputFormat.addInputPath(job, new Path(otherArgs[0]));
         Path outputPath = new Path(otherArgs[1]);
@@ -76,17 +80,13 @@ public class WordCountTest extends Configured implements Tool {
         if (fs.exists(outputPath)) {
             fs.delete(outputPath, true);
         }
-        job.setOutputFormatClass(TextOutputFormat.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
         TextOutputFormat.setOutputPath(job, outputPath);
-
-        job.setNumReduceTasks(4);
-        job.addCacheFile(new URI("hdfs://192.168.101.219:9000/user/root/test/cache/cache_file.txt#CHENGTEST"));
+        job.setOutputFormatClass(TextOutputFormat.class);
+        job.setMapOutputKeyClass(MyPair.class);
+        job.setOutputKeyClass(NullWritable.class);
+        job.setOutputValueClass(Text.class);
 
         // Section 3 excute job
         return job.waitForCompletion(true) ? 0 : 1;
     }
-
 }
-
