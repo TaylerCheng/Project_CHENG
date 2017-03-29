@@ -19,12 +19,12 @@ public class JoinReduce extends Reducer<MyPair, Text, NullWritable, Text> {
     public void reduce(MyPair key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         List<String> cacheData = new ArrayList<String>();
         for (Text value : values) {
-            String valueStr = value.toString();
-            if (valueStr.startsWith("A")) {
-                cacheData.add(valueStr.substring(1, valueStr.length()));
+            String keyStr = key.toString();
+            if (keyStr.startsWith("A")) {
+                cacheData.add(value.toString());
             } else {
                 for (String data : cacheData) {
-                    outValue.set(data + "\t" + valueStr.substring(1, valueStr.length()));
+                    outValue.set(data + "\t" + value.toString());
                     System.out.println(outValue.toString());
                     context.write(NullWritable.get(), outValue);
                 }
