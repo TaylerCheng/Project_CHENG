@@ -30,23 +30,23 @@
         <property name="maxIdleTime" value="${db.maxIdleTime}"/>
     </bean>
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
-        <constructor-arg name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="userDao" class="com.cg.web.spring.dao.impl.JdbcUserDao">
-        <!--<property name="jdbcTemplate" ref="jdbcTemplate"/>-->
-    </bean>
-
-    <!--<bean id="sqlSessionFactory"-->
-    <!--class="org.mybatis.spring.SqlSessionFactoryBean">-->
-    <!--<property name="dataSource" ref="loanDataSource"/>-->
-    <!--<property name="configLocation"-->
-    <!--value="classpath:mybatis/mybatis-config.xml"/>-->
-    <!--<property name="mapperLocations"-->
-    <!--value="classpath*:mybatis/mappers/**/*.xml"/>-->
-    <!--<property name="typeAliasesPackage"-->
-    <!--value="com.zealfi.bdxiaodai.apigw.ksdao.model.pojo"/>-->
+    <!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">-->
+        <!--<constructor-arg name="dataSource" ref="dataSource"/>-->
     <!--</bean>-->
+
+    <!--<bean id="userDao" class="com.cg.web.spring.dao.impl.JdbcUserDao">-->
+        <!--&lt;!&ndash;<property name="jdbcTemplate" ref="jdbcTemplate"/>&ndash;&gt;-->
+    <!--</bean>-->
+
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation"
+                  value="classpath:mybatis/generatorConfig.xml"/>
+        <property name="mapperLocations"
+                  value="classpath*:mybatis/xml/**/*.xml"/>
+        <property name="typeAliasesPackage"
+                  value="com.zealfi.bdxiaodai.apigw.ksdao.model.pojo"/>
+    </bean>
 
 </beans>
