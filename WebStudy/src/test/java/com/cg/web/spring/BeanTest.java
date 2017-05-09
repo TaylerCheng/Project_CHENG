@@ -1,6 +1,7 @@
 package com.cg.web.spring;
 
 import com.cg.web.spring.aop.service.impl.MyHelloServiceImpl;
+import com.cg.web.spring.aop.service.impl.PojoHelloService;
 import com.cg.web.spring.bean.SpringHelloWorld;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +20,14 @@ public class BeanTest {
     @Test
     public void  test001(){
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring/applicationContext.xml");
+//        SpringHelloWorld helloWorld = (SpringHelloWorld) applicationContext.getBean("springHelloWorld");
+//        SpringHelloWorld helloWorld2 = (SpringHelloWorld) applicationContext.getBean("com.cg.web.spring.bean.SpringHelloWorld");
+//        System.out.println(helloWorld.equals(helloWorld2));
+        PojoHelloService pojoHelloService = (PojoHelloService) applicationContext.getBean("pojoHelloService");
+        SpringHelloWorld springHelloWorld = pojoHelloService.getSpringHelloWorld();
         SpringHelloWorld helloWorld = (SpringHelloWorld) applicationContext.getBean("springHelloWorld");
-        SpringHelloWorld helloWorld2 = (SpringHelloWorld) applicationContext.getBean("com.cg.web.spring.bean.SpringHelloWorld");
-        System.out.println(helloWorld.equals(helloWorld2));
+        System.out.println(springHelloWorld==helloWorld);
+
     }
 
 }

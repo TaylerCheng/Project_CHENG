@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.dubbo.common.json.JSONObject;
 import org.json.JSONObject;
 
 public class HttpTest

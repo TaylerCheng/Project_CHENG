@@ -2,8 +2,9 @@ package com.cg.javacore;
 
 import com.mongodb.internal.HexUtils;
 import org.junit.Test;
+import sun.misc.IOUtils;
 
-import java.nio.charset.Charset;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +25,7 @@ public class HelloWorldTest {
     public void test001() {
         int a = 2;
         int b = 6;
-        double r = (double)a / b;
+        double r = (double) a / b;
         System.out.println(r);
     }
 
@@ -35,7 +36,7 @@ public class HelloWorldTest {
     public void test002() {
         float f = Float.valueOf("0.7");
         double d = 0.7;
-        System.out.println(f==d);
+        System.out.println(f == d);
     }
 
     /**

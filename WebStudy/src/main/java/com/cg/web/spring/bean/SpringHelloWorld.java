@@ -1,21 +1,18 @@
 package com.cg.web.spring.bean;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 /**
  * @author： Cheng Guang
  * @date： 2017/4/21.
  */
-@Service
+//@Service
 public class SpringHelloWorld {
 
-    {
-        System.out.println("static");
-        System.out.println(hashCode());
-    }
+    //    {
+    //        System.out.println("static");
+    //        System.out.println(hashCode());
+    //    }
 
     public void sayHello() {
         System.out.println("Hello World!");

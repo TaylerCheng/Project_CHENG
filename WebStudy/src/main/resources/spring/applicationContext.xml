@@ -19,6 +19,6 @@
     <!--自动加载注解切面-->
     <!--<aop:aspectj-autoproxy/>-->
 
-    <bean class="com.cg.web.spring.bean.SpringHelloWorld"/>
+    <bean id ="springHelloWorld" class="com.cg.web.spring.bean.SpringHelloWorld"/>
 
 </beans>
