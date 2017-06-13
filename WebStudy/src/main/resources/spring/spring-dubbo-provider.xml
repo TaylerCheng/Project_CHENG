@@ -25,12 +25,12 @@
     <dubbo:application name="${dubbo.application.name}"  />
 
     <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.cg.web.dubbo.service.CustomerService" ref="customerService" />
-    <dubbo:service interface="com.cg.web.dubbo.service.LoanService" ref="loanService" />
+    <dubbo:service interface="com.cg.web.dubbo.CustomerService" ref="customerService" />
+    <dubbo:service interface="com.cg.web.dubbo.LoanService" ref="loanService" />
 
     <!-- 服务具体的实现bean -->
-    <bean id="customerService" class="com.cg.web.dubbo.service.impl.CustomerServiceImpl" />
-    <bean id="loanService" class="com.cg.web.dubbo.service.impl.LoanServiceImpl" />
+    <bean id="customerService" class="com.cg.web.dubbo.impl.CustomerServiceImpl" />
+    <bean id="loanService" class="com.cg.web.dubbo.impl.LoanServiceImpl" />
 
 
     <!-- 使用multicast广播注册中心暴露服务地址

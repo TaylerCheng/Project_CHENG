@@ -19,34 +19,43 @@ public class TestServlet extends HttpServlet
 {
 
 	@Override
-	protected void doGet( HttpServletRequest req, HttpServletResponse resp )
-			throws ServletException, IOException
-	{
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ServletInputStream inputStream = req.getInputStream();
 		System.out.println("----START-----");
-		System.out.println("getContextPath: "+req.getRequestURI()+req.getServletPath());
-		System.out.println("getQueryString: "+req.getQueryString());
+		System.out.println("getRequestURI: " + req.getRequestURI());
+		System.out.println("getQueryString: " + req.getQueryString());
 		String data = IOUtils.read(new InputStreamReader(inputStream));
-		System.out.println(data);
+		System.out.println("Request data: "+data);
+		ServletOutputStream outputStream = resp.getOutputStream();
+		PrintStream printStream = new PrintStream(outputStream);
+		printStream.print("Hello,Cheng Guang!");
+		printStream.close();
 		System.out.println("----STOP-----");
 	}
 
 	@Override
-	protected void doPost( HttpServletRequest req, HttpServletResponse resp )
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		System.out.println("----START-----");
-//		System.out.println(req.getParameter("a"));
-//		ServletOutputStream outputStream = resp.getOutputStream();
-//		PrintStream printStream = new PrintStream(outputStream);
-//		printStream.print("a = " + req.getParameter("a"));
-//		printStream.close();
+		//		System.out.println(req.getParameter("a"));
+		//		ServletOutputStream outputStream = resp.getOutputStream();
+		//		PrintStream printStream = new PrintStream(outputStream);
+		//		printStream.print("a = " + req.getParameter("a"));
+		//		printStream.close();
 
-//		getParameter() 和 getInputStream()先到先得
+		/**
+		 * getParameter() 和 getInputStream()先到先得
+		 */
+		//		System.out.println("getContextPath: "+req.getRequestURI());
+//		req.setCharacterEncoding("utf-8");
+//		String b = req.getParameter("b");
+//		System.out.println("req.getParameter:    " + b);
+		//		System.out.println(new String(b.getBytes("ISO-8859-1"),"utf-8"));
 
-		System.out.println("getContextPath: "+req.getRequestURI());
-		ServletInputStream inputStream = req.getInputStream();
-		String data = IOUtils.read(new InputStreamReader(inputStream));
-		System.out.println(data);
+		//		ServletInputStream inputStream = req.getInputStream();
+		//		String data = IOUtils.read(new InputStreamReader(inputStream));
+		//		System.out.println(data);
+		this.doGet(req, resp);
 		System.out.println("----STOP-----");
 	}
+
 }

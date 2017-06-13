@@ -2,9 +2,8 @@ package com.cg.javacore;
 
 import com.mongodb.internal.HexUtils;
 import org.junit.Test;
-import sun.misc.IOUtils;
 
-import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -112,6 +111,12 @@ public class HelloWorldTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -90);
         System.out.println(calendar.getTime());
+    }
+
+    @Test
+    public void test010() throws Exception {
+        System.out.println(System.getProperties().getProperty("file.encoding"));
+        System.out.println(Charset.defaultCharset());
     }
 
 }

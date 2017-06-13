@@ -8,8 +8,7 @@
 
     <!-- 使用spring自带的占位符替换功能 -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="systemPropertiesModeName"
-                  value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
@@ -23,7 +22,7 @@
     <!-- 使用multicast广播注册中心暴露发现服务地址 -->
     <dubbo:registry protocol="zookeeper" address="${zookeeper.address}"/>
     <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
-    <dubbo:reference id="customerService" interface="com.cg.web.dubbo.service.CustomerService"/>
-    <dubbo:reference id="loanService" interface="com.cg.web.dubbo.service.LoanService"/>
+    <dubbo:reference id="customerService" interface="com.cg.web.dubbo.CustomerService"/>
+    <dubbo:reference id="loanService" interface="com.cg.web.dubbo.LoanService"/>
 
 </beans>
