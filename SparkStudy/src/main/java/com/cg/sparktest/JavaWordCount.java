@@ -64,12 +64,13 @@ public final class JavaWordCount {
     });
  
 	counts.saveAsTextFile("/output/result");
+
+    //    List<Tuple2<String, Integer>> output = counts.collect();
+    //    for (Tuple2<?,?> tuple : output) {
+    //      System.out.println(tuple._1() + ": " + tuple._2());
+    //    }
+
     ctx.stop();
-    
-//    List<Tuple2<String, Integer>> output = counts.collect();
-//    for (Tuple2<?,?> tuple : output) {
-//      System.out.println(tuple._1() + ": " + tuple._2());
-//    }    
   }
 }
 
