@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.cg.javacore.cloneobject.Student;
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -47,4 +48,9 @@ public class StudentTest extends TestCase  {
 		}
 	}
 
+	@Test
+	public void test() {
+		int i = 1;
+		System.out.println(int.class);
+	}
 }

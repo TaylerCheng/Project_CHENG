@@ -10,8 +10,8 @@ public class Test {
 		HelloWorld gmv = new HelloWorld("cheng");
 		
 		
-		//Class c1 = HelloWorld.class;
-		Class c2 = Class.forName("com.cg.HelloWorld");
+		//Class c1 = BTNode.class;
+		Class c2 = Class.forName("com.cg.BTNode");
 		Method method=c2.getMethod("main",String[].class);
 		method.invoke(null, (Object)new String[]{"a","b"});
 		
@@ -28,11 +28,11 @@ public class Test {
 //		for (Constructor constructor : constructors) {
 //			System.out.println(constructor);
 //		}
-//		HelloWorld helloWorld = new HelloWorld("cheng");
+//		BTNode helloWorld = new BTNode("cheng");
 //		Field fieldx = c.getClass().getField("str");
 //		
 //		System.out.println(fieldx);
-		//HelloWorld gmv = (HelloWorld)c.newInstance();
+		//BTNode gmv = (BTNode)c.newInstance();
         
 		
 //        Method m[] = c.getDeclaredMethods();                  
