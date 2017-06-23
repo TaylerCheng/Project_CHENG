@@ -19,7 +19,6 @@ import com.niuwa.hadoop.chubao.ChubaoJobConfig;
 import com.niuwa.hadoop.chubao.NiuwaMapper;
 import com.niuwa.hadoop.chubao.NiuwaReducer;
 import com.niuwa.hadoop.chubao.RunParams;
-import com.niuwa.hadoop.chubao.rules.Rules;
 import com.niuwa.hadoop.chubao.utils.ChubaoDateUtil;
 import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
@@ -66,7 +65,7 @@ public class IndicatorJob006 extends BaseJob {
             double increate_line = 0.0;//正常还款增长额度
             double rate_des = 0.0;//逾期还款减额系数
             int loan_max_out_day = 0;  //最大逾期天数
-            boolean first_flag = true;//首次贷款
+            boolean is_old_user = false;//是否为老用户
             for (Text value : values) {
                 JSONObject object = JSONObject.parseObject(value.toString());
 
@@ -75,7 +74,7 @@ public class IndicatorJob006 extends BaseJob {
                 String loan_check_status = object.getString("loan_check_status");
                 if (loan_repay_status!= null) {
                     if ("s".equalsIgnoreCase(loan_check_status)) {
-                        first_flag = false;
+                        is_old_user = true;
                     }
                     if ("s".equalsIgnoreCase(loan_repay_status)) {
                         increate_line += object.getDouble("repay_nomarl_increate");
@@ -107,17 +106,16 @@ public class IndicatorJob006 extends BaseJob {
                 }
 
             }
-            double base_fee_rate = getBaseFeeRate(first_flag,result.getDouble("break_ratio"),loan_max_out_day);
+            double base_fee_rate = getBaseFeeRate(is_old_user,result.getDouble("break_ratio"),loan_max_out_day);
             result.put("base_fee_rate",base_fee_rate);
-
-            if (Rules.joinRule(result, "user_base_amount")) {
-                // 最终可借金额 = 正常增长额+逾期增长额+初始额度
-                double finalAmount = Math.min(increate_line + rate_des * result.getDouble("user_base_amount") + result.getDouble("user_base_amount"), 5000);
-                result.put("final_amount", ChubaoUtil.getIntAmount(finalAmount));
-                result.put("loan_max_out_day", loan_max_out_day);
-                result.put("user_id", key.toString());
-                context.write(NullWritable.get(), new Text(result.toJSONString()));
-            }
+            result.put("user_id", key.toString());
+            result.put("is_old_user",is_old_user);
+            result.put("loan_max_out_day", loan_max_out_day);
+            // 最终可借金额 = 正常增长额+逾期增长额+初始额度
+            double finalAmount = Math.min(increate_line + rate_des * result.getDoubleValue("user_base_amount") + result
+                    .getDoubleValue("user_base_amount"), 5000);
+            result.put("final_amount", ChubaoUtil.getIntAmount(finalAmount));
+            context.write(NullWritable.get(), new Text(result.toJSONString()));
         }
 
     }
@@ -157,7 +155,7 @@ public class IndicatorJob006 extends BaseJob {
      *
      * @param loan
      * @return
-     * @see 正常还款：状态已结清（s）
+     * @see [正常还款：状态已结清（s）]
      * @since [产品/模块版本](可选)
      */
     private static double getIncreseNormal(JSONObject loan) {
@@ -217,13 +215,13 @@ public class IndicatorJob006 extends BaseJob {
     /**
      * 计算用户基础费率
      *
-     * @param first_flag
+     * @param is_old_user
      * @param break_ratio
      * @param loan_max_out_day
      * @return
      */
-    private static double getBaseFeeRate(boolean first_flag, Double break_ratio, int loan_max_out_day) {
-        if (first_flag) {
+    private static double getBaseFeeRate(boolean is_old_user, Double break_ratio, int loan_max_out_day) {
+        if (!is_old_user) {
             if (break_ratio != null && break_ratio < 0.5) {
                 return ChubaoConstants.FIRST_A_BASE_FEE_RATE;
             } else {

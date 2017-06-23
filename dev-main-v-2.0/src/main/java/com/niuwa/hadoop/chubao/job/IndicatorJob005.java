@@ -1,9 +1,9 @@
 package com.niuwa.hadoop.chubao.job;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +20,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.niuwa.hadoop.chubao.ChubaoJobConfig;
 import com.niuwa.hadoop.chubao.NiuwaMapper;
 import com.niuwa.hadoop.chubao.RunParams;
-import com.niuwa.hadoop.chubao.rules.Rules;
 import com.niuwa.hadoop.chubao.utils.ChubaoUtil;
 import com.niuwa.hadoop.util.HadoopUtil;
 /**
@@ -35,40 +34,30 @@ import com.niuwa.hadoop.util.HadoopUtil;
  * @since 2016-6-21 
  */
 public class IndicatorJob005 extends BaseJob {
-    static Logger log = Logger.getLogger(IndicatorJob005.class);
-	static Map<String, String> levelMap = new HashMap<String, String>();
+	private static Logger log = Logger.getLogger(IndicatorJob005.class);
+	private static Map<String, String> levelMap = new HashMap<String, String>();
 	
 	public static class PriceRuleMapper extends NiuwaMapper<Object, Text, NullWritable, Text>{
 	    
 	    public void  setup(Context context){
-	        /**
-	         * 读取cachefiles
-	         * 
-	         * 官方文档使用这个方法，测试使用上下文也能获取到，还不知道问题所在
-	         * URI[] patternsURIs = Job.getInstance(context.getConfiguration()).getCacheFiles();
-	         */
-	        
 	    	super.setup(context);
-	    	BufferedReader reader= null;
-	        try{
 
-	        	URI[] paths =context.getCacheFiles();
-		        log.info("[ cached file number ]{}"+ paths.length);
-		        //Path cacheFilePath= new Path(paths[1].getPath());
-		        Path cacheFilePath= new Path(paths[0].getPath());
-		        reader= new BufferedReader(new FileReader(cacheFilePath.getName().toString()));
-		        String str= null;
-	            while((str= reader.readLine())!=null){
-	                String[] spilts= str.split(";");
-	                levelMap.put(spilts[0], spilts[2]);
-	            }
-	        }catch(Exception e){
-	            e.printStackTrace();
-	        }finally{
+            File file = new File(ChubaoJobConfig.CONFIG_STATIC_MOBILE_TIER_FILE_NAME);
+	    	BufferedReader reader= null;
+	        try {
+				reader = new BufferedReader(new FileReader(file));
+				String str = null;
+				while ((str = reader.readLine()) != null) {
+					String[] spilts = str.split(";");
+					levelMap.put(spilts[0], spilts[2]);
+				}
+				log.info("Load the config file successfully,the file path is " + file.getAbsolutePath());
+			}catch(Exception e) {
+				log.error("Load the config file failed,the file path is " + file.getAbsolutePath(), e);
+			}finally{
 	            try {
 					reader.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }
@@ -88,28 +77,24 @@ public class IndicatorJob005 extends BaseJob {
 			 * user_geo（地理位置）
 			 * 2017/02/23添加字段：user_loan_overdue(触宝渠道判定三个月内借款逾期次数)
 			 */
-		    JSONObject userInfo = JSONObject.parseObject(value.toString());
-		    JSONObject resultObj=new JSONObject();
-			
-			if(ChubaoJobConfig.isDebugMode() 
-					||(Rules.isMatchedRule_1(userInfo.getLong("device_activation")))){
-				
-				String addrLevel = getAddrLevel(userInfo.getString("device_this_phone"));
-				resultObj.put("user_id", userInfo.getString("user_id"));
-				resultObj.put("device_activation", userInfo.getLong("device_activation"));
-				resultObj.put("device_this_phone", userInfo.getString("device_this_phone"));
-				resultObj.put("user_loan_overdue", userInfo.getIntValue("user_loan_overdue"));
+			JSONObject userInfo = JSONObject.parseObject(value.toString());
+			JSONObject resultObj = new JSONObject();
 
-				if("1".equals(addrLevel)){
-					resultObj.put("user_base_amount", 1000.00);
-				}else if("2".equals(addrLevel)){
-					resultObj.put("user_base_amount", 800.00);
-				}else{
-					resultObj.put("user_base_amount",500.00);
-				}
-				//输出结果：可借初始金额、日手续费率、user_id
-				context.write(NullWritable.get(),new Text(resultObj.toJSONString()));
+			String addrLevel = getAddrLevel(userInfo.getString("device_this_phone"));
+			resultObj.put("user_id", userInfo.getString("user_id"));
+			resultObj.put("device_activation", userInfo.getLong("device_activation"));
+			resultObj.put("device_this_phone", userInfo.getString("device_this_phone"));
+			resultObj.put("user_loan_overdue", userInfo.getIntValue("user_loan_overdue"));
+
+			if ("1".equals(addrLevel)) {
+				resultObj.put("user_base_amount", 1000.00);
+			} else if ("2".equals(addrLevel)) {
+				resultObj.put("user_base_amount", 800.00);
+			} else {
+				resultObj.put("user_base_amount", 500.00);
 			}
+			//输出结果：可借初始金额、日手续费率、user_id
+			context.write(NullWritable.get(), new Text(resultObj.toJSONString()));
 		}
 	}
 	
@@ -156,7 +141,7 @@ public class IndicatorJob005 extends BaseJob {
         
 		
         // 缓存配置文件
-        job.addCacheFile(ChubaoJobConfig.getConfigPath("static-mobile-tier.txt").toUri());
+        job.addCacheFile(ChubaoJobConfig.getConfigPath(ChubaoJobConfig.CONFIG_STATIC_MOBILE_TIER_FILE_NAME).toUri());
         // 输入路径
         FileInputFormat.addInputPath(job, ChubaoJobConfig.getInputPath(ChubaoJobConfig.INPUT_USER_INFO));
 		// 输出路径

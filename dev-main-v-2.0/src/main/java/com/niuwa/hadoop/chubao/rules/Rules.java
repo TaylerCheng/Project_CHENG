@@ -33,18 +33,23 @@ public class Rules extends BaseRules{
     
     // rule 2 客户最近三个月通话记录数不少于100条
     public static boolean isMatchedRule_2(int sum) {
-        return sum >= 100;
+        return sum >= 50;
     }
 
-    // baseRule 日期少于6个月并且呼出类型为1并且电话类型必须合适
-    public static boolean callLogBaseRule(JSONObject form) {
+    /**
+     * 筛选出符合规则一的通话记录：
+     * 1、为呼出通话（主叫）
+     * 2、为最近6个月通话记录
+     * 3、为手机号码通话记录
+     */
+    public static boolean callLogMatchRule_3(JSONObject form) {
         if (form.getLong("call_date") == null) {
             return false;
         }
-        
-        return (!ChubaoDateUtil.compareDateAfterMonth(-6, form.getLong("call_date") * 1000))
-        		&& ChubaoDateUtil.compareDateAfterMonth(0, form.getLong("call_date") * 1000)
-                && form.getIntValue("call_type") == 1 && ChubaoUtil.telVilidate(form.getString("other_phone"));
+        long call_date = form.getLong("call_date") * 1000;
+        return (form.getIntValue("call_type") == 1 && !ChubaoDateUtil.compareDateAfterMonth(-6, call_date))
+                && ChubaoDateUtil.compareDateAfterMonth(0, call_date) && ChubaoUtil
+                .telVilidate(form.getString("other_phone"));
     }
 
     /**
@@ -54,40 +59,33 @@ public class Rules extends BaseRules{
      * @return
      */
     public static boolean rule3(JSONObject resultObj) {
-        int contact_sum = resultObj.getInteger("contact_sum");
-        double call_true_rate_type = resultObj.getDouble("call_true_rate_type");
-        resultObj.put("rule_type", 0);
-        if (100 <= contact_sum && 0.3 <= call_true_rate_type && call_true_rate_type < 0.5) {
-            resultObj.put("rule_type", 3);
+        //通讯录数量
+        int contact_sum = resultObj.getIntValue("contact_sum");
+        //呼出电话中标记为true的号码数
+        int call_out_true_6_month_sum = resultObj.getIntValue("call_out_true_6_month_sum");
+        //呼出电话中标记为true的号码数占呼出总号码数的占比
+        double call_true_rate_type = resultObj.getDoubleValue("call_true_rate_type");
+        if (call_true_rate_type >= 0.1 && (contact_sum >= 20 || call_out_true_6_month_sum >= 20)) {
             return true;
-        } else if (50 <= contact_sum && 0.4 <= call_true_rate_type && call_true_rate_type < 0.5) {
-            resultObj.put("rule_type", 3);
-            return true;
-        } else if (20 <= contact_sum && contact_sum < 100 && 0.5 <= call_true_rate_type) {
-            resultObj.put("rule_type", 2);
-            return true;
-        } else if (100 <= contact_sum && 0.5 <= call_true_rate_type) {
-            resultObj.put("rule_type", 1);
-            return true;
+        } else {
+            return false;
         }
-        // TODO 正式环境改为false
-        return false;
-    }
-    
-    public static boolean isMatchedRule4(int totalCallsFromTelLibrary, int totalDiffNumFromTelLibrary){
-    	return !(calledNotLessThanNTimesFromTelLibrary(totalCallsFromTelLibrary, TOTAL_CALLS_NUM_FROM_TEL_LIBRARY) || 
-    			calledNotLessThanNDiffNumFromTelLibrary(totalDiffNumFromTelLibrary, 
-    					TOTAL_DIFF_NUM_FROM_TEL_LIBRARY));
     }
 
-    public static boolean rule4(JSONObject resultObj) {
-        if (resultObj.getBoolean("max_contact_call")
-                || (resultObj.getIntValue("rule_type") == 3 && 0.5 < resultObj.getDouble("call_top5_perct_type"))) {
-            return true;
-        }
-        // TODO 正式环境改为false
-        return false;
-    }
+    //规则4下线  2017/02/24
+//    public static boolean isMatchedRule4(int totalCallsFromTelLibrary, int totalDiffNumFromTelLibrary){
+//    	return !(calledNotLessThanNTimesFromTelLibrary(totalCallsFromTelLibrary, TOTAL_CALLS_NUM_FROM_TEL_LIBRARY) ||
+//    			calledNotLessThanNDiffNumFromTelLibrary(totalDiffNumFromTelLibrary,
+//    					TOTAL_DIFF_NUM_FROM_TEL_LIBRARY));
+//    }
+//
+//    public static boolean rule4(JSONObject resultObj) {
+//        if (resultObj.getBoolean("max_contact_call")
+//                || (resultObj.getIntValue("rule_type") == 3 && 0.5 < resultObj.getDouble("call_top5_perct_type"))) {
+//            return true;
+//        }
+//        return false;
+//    }
     
     //rule5:借款(小额)最大逾期天数高于15天或者进入过m2
     public static boolean rule5(JSONObject resultObj){

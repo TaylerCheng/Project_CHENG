@@ -84,7 +84,7 @@ public class CallLogJob001 extends BaseJob {
                 int call_type = callLog.getInteger("call_type");//通话类型
                 boolean call_contact = callLog.getBoolean("call_contact");//通话号码是否在通讯录中
                 long device_activation = callLog.getLong("device_activation");//设备激活时间
-                if (Rules.callLogBaseRule(callLog)
+                if (Rules.callLogMatchRule_3(callLog)
                         && (ChubaoJobConfig.isDebugMode() || Rules.isMatchedRule_1(device_activation))) {
                     call_sum++;
                     call_type_1_sum += call_type;

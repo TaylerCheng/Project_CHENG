@@ -43,15 +43,10 @@ public class IndicatorJob001 extends BaseJob{
 
 			JSONObject form = JSONObject.parseObject(value.toString());
 
-			if(Rules.callLogBaseRule(form)  
-				&& ( ChubaoJobConfig.isDebugMode() || Rules.isMatchedRule_1(form.getLong("device_activation")))
-				) {
-				outKey.set(form.getString("user_id") + "\t"
-						+ form.getString("other_phone"));
-				/**
-				 * 最后一位统计call_type_1_sum 根据目前call_type 的设置用了一个不安全的计算法，如果type不止 1、0两种，这里需要按照实际type加入判断代码
-				 */
-				outValue.set(1 + "\t" + form.getBoolean("call_contact")+ "\t"+ form.getInteger("call_type"));
+			if (Rules.callLogMatchRule_3(form) && (ChubaoJobConfig.isDebugMode() || Rules
+					.isMatchedRule_1(form.getLong("device_activation")))) {
+				outKey.set(form.getString("user_id") + "\t" + form.getString("other_phone"));
+				outValue.set(1 + "\t" + form.getBooleanValue("call_contact"));
 				context.write(outKey, outValue);
 			}
 		}
@@ -62,18 +57,15 @@ public class IndicatorJob001 extends BaseJob{
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
-			int sum = 0;
-			int call_type_1_sum= 0;
-			boolean isTrue = false;
+			int call_type_1_sum = 0;
+			boolean callContactIsTrue = false;
 			for (Text val : values) {
-				String vals[] = val.toString().split("\t");
-				sum += Integer.parseInt(vals[0]);
-				Boolean b = new Boolean(vals[1]);
-				call_type_1_sum+= Integer.parseInt(vals[2]);
-				
-				isTrue= isTrue||b.booleanValue();
+				String[] strs = val.toString().split("\t");
+				call_type_1_sum +=Integer.valueOf(strs[0]);
+				Boolean b = new Boolean(strs[1]);
+				callContactIsTrue = callContactIsTrue || b.booleanValue();
 			}
-			outValue.set(sum + "\t" + isTrue+ "\t"+ call_type_1_sum);
+			outValue.set(call_type_1_sum + "\t" + callContactIsTrue);
 			context.write(key, outValue);
 		}
 	}

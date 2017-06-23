@@ -50,7 +50,9 @@ public class ChubaoJobConfig {
 	
 	public static final String CONFIG_TEL_LIBARAY_FILE_NAME = "tel-library.txt";
 	public static final String CONFIG_APP_LIBARAY_FILE_NAME = "app-library.txt";
-	
+	public static final String CONFIG_STATIC_MOBILE_TIER_FILE_NAME = "static-mobile-tier.txt";
+	public static final String CONFIG_RATE_FILE_NAME = "rate-config.txt";
+
 	/**
 	 * 获取配置路径
 	 * 

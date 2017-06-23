@@ -6,6 +6,6 @@ package com.niuwa.hadoop.chubao.enums;
  */
 public enum RuleCounter {
 
-    RULE_PASS, RULE_1, RULE_2, RULE_3, RULE_4, RULE_5, RULE_6, RULE_7, RULE_8, RULE_9;
+    WHITE_LIST_PASS,RULE_PASS, RULE_1, RULE_2, RULE_3, RULE_4, RULE_5, RULE_6, RULE_7, RULE_8, RULE_9;
 
 }

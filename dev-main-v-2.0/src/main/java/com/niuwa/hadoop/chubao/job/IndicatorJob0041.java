@@ -25,8 +25,9 @@ import com.niuwa.hadoop.util.HadoopUtil;
 /** 读取call_log
  *  输出{"user_id": "xxx", "other_phone": "xxx", "total_call_num": 123}
  * @author Administrator
- *
+ * @deprecated 规则4下线 since 2017/03/15
  */
+@Deprecated
 public class IndicatorJob0041 extends BaseJob{
 	
 	public static class UserIdsMapper extends NiuwaMapper<Object, Text, Text, IntWritable> {

@@ -59,7 +59,7 @@ public class IndicatorJob004 extends BaseJob {
 
 			String[] values=value.toString().split("\t");
 			outKey.set(values[0]);
-			outValue.set(ChubaoUtil.array2Str(values, 1));
+			outValue.set(value);
 			context.write(outKey, outValue);
 		}
 	}
@@ -75,89 +75,36 @@ public class IndicatorJob004 extends BaseJob {
 		
 		public void reduce(Text key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
-			//总呼叫数
-			int sum = 0;
-			//呼叫手机种类数
-			int numSum=0;
-			//呼叫联系人种类数
-			int trueNumSum=0;
-
-			//最大呼叫数
-			int maxSum=0;
-			//呼叫最大数的手机号集合
-			String maxContactPhone= "";
-			Boolean maxContactPhoneStatus= false;
-			
-			//
-			List<Integer> top5Call= new ArrayList<Integer>();
-			
-			Comparator<Integer> comparator= new Comparator<Integer>() {
-				@Override
-				public int compare(Integer o1, Integer o2) {
-					return o1-o2;
-				}				
-			};
-			
+			//呼出总号码数
+			int call_out_6_month_sum = 0;
+			//呼出电话中标记为true的号码数
+			int call_out_true_6_month_sum = 0;
 			for (Text val : values) {
+				// value中的字段为{user_id，other_phone，call_type_1_sum, callContactIsTrue}
 				String vals[] = val.toString().split("\t");
-				//单个手机呼叫数
-				int sum_part=Integer.parseInt(vals[1]);
-				sum += sum_part;
-				Boolean b = new Boolean(vals[2]);
-				int call_type_1_sum= Integer.parseInt(vals[3]);
-				
-				// 号码记为true，排除总呼出数=1的号码
-				if (b.booleanValue() && call_type_1_sum>1) {
-					trueNumSum++;
-				}
+				//用户与单个手机呼出通话数
+				int call_type_1_sum = Integer.parseInt(vals[2]);
 				// 排除总呼出数=1的号码
-				if (call_type_1_sum>1) {
-					numSum++;
-				}
-				
-				if(maxSum<sum_part){
-					maxSum=sum_part;
-					maxContactPhone= vals[0];
-					maxContactPhoneStatus= b;
-				}
-				if(maxSum==sum_part){
-					maxContactPhoneStatus= maxContactPhoneStatus||b;
-				}
-				
-				
-				top5Call.add(sum_part);
-				Collections.sort(top5Call, comparator);
-				if(top5Call.size() > 5){
-					top5Call.remove(0);
+				if (call_type_1_sum > 1) {
+					call_out_6_month_sum++;
+					// 统计号码标记为true
+					Boolean callContactIsTrue = new Boolean(vals[3]);
+					if (callContactIsTrue.booleanValue()) {
+						call_out_true_6_month_sum++;
+					}
 				}
 
 			}
-			//top5 sum
-				int top5sum=0;
-				for(Integer mapkey : top5Call){
-					top5sum+=mapkey;
-				}
-				
-				double call_top5_perct_type=(double)top5sum/sum;
-				
-				double call_true_rate_type=(double)trueNumSum/numSum;
-				
-				//call_true_rate_type<0.3为无效
-				if(call_true_rate_type>=0.3){
-					//输出结果为   userid	call_true_rate_type	 max_contact_call	call_top5_perct_type
-					outObj.put("user_id", key.toString());
-					outObj.put("call_true_rate_type", call_true_rate_type);
-					outObj.put("call_out_6_month_sum", numSum);					
-					outObj.put("call_out_true_6_month_sum", trueNumSum);
-					outObj.put("max_contact_call", maxContactPhoneStatus);
-					outObj.put("max_contact_call_number", maxContactPhone);
-					outObj.put("call_top5_perct_type", call_top5_perct_type);
-					outObj.put("total_call", sum);
-					outObj.put("top5sum_call", top5sum);
-					
-					outValue.set(outObj.toJSONString());
-					context.write(NullWritable.get(), outValue);
-				}
+
+			double call_true_rate_type = (double) call_out_true_6_month_sum / call_out_6_month_sum;
+
+            outObj.put("user_id", key.toString());
+            outObj.put("call_true_rate_type", call_true_rate_type);
+            outObj.put("call_out_6_month_sum", call_out_6_month_sum);
+            outObj.put("call_out_true_6_month_sum", call_out_true_6_month_sum);
+
+			outValue.set(outObj.toJSONString());
+			context.write(NullWritable.get(), outValue);
 		}
 	}
 	

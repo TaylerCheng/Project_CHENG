@@ -1,9 +1,9 @@
 package com.niuwa.hadoop.chubao.job;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,65 +41,47 @@ import com.niuwa.hadoop.util.HadoopUtil;
  * @since 2016-7-4
  */
 public class JugementJob extends BaseJob {
-	
-    public static class MapSevralTemp extends NiuwaMapper<Object, Text, Text, Text>{
-		public void map(Object key, Text value, Context context) throws IOException, InterruptedException{
 
-			JSONObject record= JSONObject.parseObject(value.toString());
+	public static class MapSevralTemp extends NiuwaMapper<Object, Text, Text, Text> {
 
+		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+			JSONObject record = JSONObject.parseObject(value.toString());
 			context.write(new Text(record.getString("user_id")), value);
 		}
+
 	}
 	
 	public static class ReduceObj extends NiuwaReducer<Text, Text, NullWritable, Text>{
 		public static final Logger log = LoggerFactory.getLogger(ReduceObj.class);
 
-		/**
-		 *  触宝费率基础
-		 *  {
-		 *		"base_prod_rate": 0.108,
-		 *		"base_daily_fee_rate": 0.005,
-		 *		"base_month_fee_rate": 0.00,
-		 *		"base_fee_rate": 0.01
-		 *	}
-		 */
 		private JSONObject baseRateRecord= null;
 		
 		// 最终结果
  		private JSONObject finalObj= new JSONObject();
  		
 		public void setup(Context context){
-	        /**
-	         * 读取cachefiles
-	         * 
-	         * 官方文档使用这个方法，测试使用上下文也能获取到，还不知道问题所在
-	         * URI[] patternsURIs = Job.getInstance(context.getConfiguration()).getCacheFiles();
-	         */
 	        super.setup(context);
-			BufferedReader reader=null;
-	        try{
-	        	
-		        URI[] paths =context.getCacheFiles();
-		        log.info("[ cached file number ]{}"+ paths.length);
-		        //Path cacheFilePath= new Path(paths[1].getPath());
-		        Path cacheFilePath= new Path(paths[0].getPath());
-		        reader= new BufferedReader(new FileReader(cacheFilePath.getName().toString()));
-		        StringBuffer content= new StringBuffer();
-		        String str= null;
-	            while((str= reader.readLine())!=null){
-	            	content.append(str);
-	            }
-	            baseRateRecord= JSONObject.parseObject(content.toString());	            
-	        }catch(Exception e){
-	            e.printStackTrace();
-	        }finally{
-	            try {
+
+			File file = new File(ChubaoJobConfig.CONFIG_RATE_FILE_NAME);
+			BufferedReader reader= null;
+			try {
+				reader = new BufferedReader(new FileReader(file));
+				String str = null;
+				StringBuffer content= new StringBuffer();
+				while ((str = reader.readLine()) != null) {
+					content.append(str);
+				}
+				baseRateRecord= JSONObject.parseObject(content.toString());
+				log.info("Load the config file successfully,the file path is " + file.getAbsolutePath());
+			}catch(Exception e) {
+				log.error("Load the config file failed,the file path is " + file.getAbsolutePath(), e);
+			}finally{
+				try {
 					reader.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	        }			
+			}
 		}
 		
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException{
@@ -117,41 +99,39 @@ public class JugementJob extends BaseJob {
 					resultObj.put(entry.getKey(), entry.getValue());
 				}
 			}
-		
-			boolean rule = JudgeRules(resultObj,context);
-            //DEBUG输出符合规则和不符合规则的；非DEBUG，只输出符合规则的
-            if(ChubaoJobConfig.isDebugMode() || rule){
+			boolean rule_passed = judgeRules(resultObj,context);
+			boolean is_old_user = resultObj.getBooleanValue("is_old_user");
+			boolean passed = rule_passed || is_old_user;//是否通过白名单，包含通过白名单规则的用户和老用户
+			if (passed) {
+				context.getCounter(RuleCounter.WHITE_LIST_PASS).increment(1);
+			}
+
+			//DEBUG输出符合规则和不符合规则的；非DEBUG，只输出符合规则的
+            if(ChubaoJobConfig.isDebugMode() || passed){
 				finalObj.put("user_id", key.toString());
 				finalObj.put("type", 1);
-				try {
-					//可借款最终金额
-					finalObj.put("amount", Double.parseDouble(df2.format(resultObj.getDouble("final_amount"))));
-					finalObj.put("prod_rate",
-							Double.parseDouble(df.format(baseRateRecord.getDouble("base_prod_rate"))));//APR
-					finalObj.put("daily_fee_rate",
-							Double.parseDouble(df.format(baseRateRecord.getDouble("daily_fee_rate"))));// 日手续费
-					finalObj.put("monthly_fee_rate",
-							Double.parseDouble(df.format(baseRateRecord.getDouble("base_month_fee_rate") + 0)));// 月手续费
-					finalObj.put("base_fee_rate",
-							Double.parseDouble(df.format(resultObj.getDouble("base_fee_rate"))));// 基本手续费
-				}catch (Exception e){
-					log.error("Parse prejob result error,resultObj = " + resultObj, e);
-				}
-                /*输出结果：
-                user_id：用户唯一标识
-                type:1:小额，2:大额
-                amount:最终可借款金额
-                prod_rate:产品费率
-                daily_fee_rate:日费率
-                month_fee_rate:月费率（小额默认为0）
-                base_fee_rate:基本费率
-                */
+				finalObj.put("rule_passed", rule_passed);
+				finalObj.put("is_old_user", is_old_user);
+				//可借款最终金额
+				finalObj.put("amount", Double.parseDouble(df2.format(resultObj.getDouble("final_amount"))));
+				//APR
+				finalObj.put("prod_rate",
+						Double.parseDouble(df.format(baseRateRecord.getDouble("base_prod_rate"))));
+				// 日手续费
+				finalObj.put("daily_fee_rate",
+						Double.parseDouble(df.format(baseRateRecord.getDouble("daily_fee_rate"))));
+				// 月手续费
+				finalObj.put("monthly_fee_rate",
+						Double.parseDouble(df.format(baseRateRecord.getDouble("base_month_fee_rate") + 0)));
+				// 基本手续费
+				finalObj.put("base_fee_rate",
+						Double.parseDouble(df.format(resultObj.getDouble("base_fee_rate"))));
 				context.write(NullWritable.get(), new Text(finalObj.toJSONString()));
             }
 		
 		}
 
-		private boolean JudgeRules(JSONObject resultObj, Context context) {
+		private boolean judgeRules(JSONObject resultObj, Context context) {
 			boolean rule1 = Rules.isMatchedRule_1(resultObj.getLong("device_activation"));
 			boolean rule2 = Rules.isMatchedRule_2(resultObj.getInteger("call_num_3_month"));
 			boolean rule3 = Rules.rule3(resultObj);
@@ -165,11 +145,11 @@ public class JugementJob extends BaseJob {
 
             //规则4下线  2017/02/24
 //          boolean rule = rule1 && rule2 && rule3 && rule4 && rule5 && rule6 && rule7 && rule8 && rule9;
-			boolean rule = rule1 && rule2 && rule3 && rule5 && rule6 && rule7 && rule8 && rule9;
+			boolean rule_passed = rule1 && rule2 && rule3 && rule5 && rule6 && rule7 && rule8 && rule9;
 
 			//DEBUG模式输出规则是否命中
 			if(ChubaoJobConfig.isDebugMode()) {
-				if (rule) {
+				if (rule_passed) {
 					context.getCounter(RuleCounter.RULE_PASS).increment(1);
 				}
 				if (rule1) {
@@ -198,17 +178,15 @@ public class JugementJob extends BaseJob {
 				}
 			    finalObj.put("rule1", rule1);
 			    finalObj.put("rule2", rule2);
-			    finalObj.put("rule3", resultObj.get("rule_type"));
+			    finalObj.put("rule3", rule3);
 //			    finalObj.put("rule4", rule4);
 			    finalObj.put("rule5", rule5);
 			    finalObj.put("rule6", rule6);
 			    finalObj.put("rule7", rule7);
                 finalObj.put("rule8", rule8);
                 finalObj.put("rule9", rule9);
-
-				finalObj.put("pass", rule);
             }
-			return rule;
+			return rule_passed;
 		}
 
 		private void initResultObj(JSONObject resultObj) {
@@ -252,7 +230,7 @@ public class JugementJob extends BaseJob {
 		job.setOutputValueClass(Text.class);
 	
 		// 读取静态缓存的费率配置文件
-		job.addCacheFile(ChubaoJobConfig.getConfigPath("rate-config.txt").toUri());
+		job.addCacheFile(ChubaoJobConfig.getConfigPath(ChubaoJobConfig.CONFIG_RATE_FILE_NAME).toUri());
         // 输入路径
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob002.class.getName()));
 		FileInputFormat.addInputPath(job, tempPaths.get(IndicatorJob003.class.getName()));

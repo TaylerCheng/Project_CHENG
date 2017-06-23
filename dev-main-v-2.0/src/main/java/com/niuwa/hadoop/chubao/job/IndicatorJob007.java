@@ -1,9 +1,6 @@
 package com.niuwa.hadoop.chubao.job;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +21,7 @@ import com.niuwa.hadoop.chubao.NiuwaMapper;
 import com.niuwa.hadoop.chubao.NiuwaReducer;
 import com.niuwa.hadoop.chubao.RunParams;
 import com.niuwa.hadoop.util.HadoopUtil;
+import org.apache.log4j.Logger;
 
 
 /*
@@ -55,35 +53,29 @@ public class IndicatorJob007 extends BaseJob{
 	
 	
 	public static class SumAppsFromAppLibraryReducer extends NiuwaReducer<Text, Text, NullWritable, Text> {
-		
+		private static Logger log = Logger.getLogger(SumAppsFromAppLibraryReducer.class);
+
 		private Text outValue = new Text();
 		private JSONObject outObj = new JSONObject();
 		
 		public void setup(Context context){
-	        /**
-	         * 读取cachefiles
-	         * 
-	         * 官方文档使用这个方法，测试使用上下文也能获取到，还不知道问题所在
-	         * URI[] patternsURIs = Job.getInstance(context.getConfiguration()).getCacheFiles();
-	         */
 	        super.setup(context);
+
+			File file = new File(ChubaoJobConfig.CONFIG_APP_LIBARAY_FILE_NAME);
 			BufferedReader reader=null;
 	        try{
-		        
-		        Path cacheFilePath= getFilePathWithName(context, ChubaoJobConfig.CONFIG_APP_LIBARAY_FILE_NAME);
-		        reader = new BufferedReader(new InputStreamReader(new FileInputStream(cacheFilePath.getName()),"UTF-8"));
-		        
+		        reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
 		        String app = null;
 	            while((app=reader.readLine()) != null){
 	            	appLibrary.add(new String(app.getBytes(), "utf-8"));
-	            }          
-	        }catch(Exception e){
-	            e.printStackTrace();
+	            }
+				log.info("Load the config file successfully,the file path is " + file.getAbsolutePath());
+			}catch(Exception e){
+				log.error("Load the config file failed,the file path is " + file.getAbsolutePath(), e);
 	        }finally{
 	            try {
 					reader.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }			
@@ -106,20 +98,7 @@ public class IndicatorJob007 extends BaseJob{
 			outValue.set(outObj.toJSONString());
 			context.write(NullWritable.get(), outValue);
 		}
-		
-		private Path getFilePathWithName(Context context, String fileName) throws IOException{
-			
-			URI[] paths = context.getCacheFiles();
-			for(int i=0; i < paths.length; i++){
-				String absPath = paths[i].getPath();
-				if(absPath.indexOf(fileName) > -1){
-					return new Path(paths[i].getPath());
-				}
-			}
-			
-			return null;
-		}
-		
+
 	}
 	
 	@Override

@@ -37,16 +37,17 @@ public class Main {
 		long startTime = System.currentTimeMillis();
 		List<ControlledJob> controlledJobs = runJobs(args);
 		long endTime = System.currentTimeMillis();
+		log.info("\n" + controlledJobs.toString());
 
 		/**
 		 * 打印白名单和每条规则的通过数
 		 */
 		if (ChubaoJobConfig.isDebugMode() && controlledJobs != null) {
-			log.info("\n" + controlledJobs.toString());
 			for (ControlledJob controlledJob : controlledJobs) {
 				if (controlledJob.getJobName().equals(JugementJob.class.getName())) {
 					Counters counters = controlledJob.getJob().getCounters();
-					log.info("white list passed:[{}]", counters.findCounter(RuleCounter.RULE_PASS).getValue());
+					log.info("white list passed:[{}]", counters.findCounter(RuleCounter.WHITE_LIST_PASS).getValue());
+					log.info("rule passed:[{}]", counters.findCounter(RuleCounter.RULE_PASS).getValue());
 					log.info("rule-1 passed:[{}]", counters.findCounter(RuleCounter.RULE_1).getValue());
 					log.info("rule-2 passed:[{}]", counters.findCounter(RuleCounter.RULE_2).getValue());
 					log.info("rule-3 passed:[{}]", counters.findCounter(RuleCounter.RULE_3).getValue());
