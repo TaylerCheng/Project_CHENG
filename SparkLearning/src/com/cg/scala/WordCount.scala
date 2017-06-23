@@ -31,7 +31,7 @@ object WordCount {
       *
       * 通过传入SparkConf实例来定制Spark运行的具体参数和配置信息
       */
-    val sc = new SparkContext(conf)
+      val sc = new SparkContext(conf)
 
     /**
       * 第3步： 根据具体的数据来源(HDFS、 HBase、Local FS、DB、 S3等)通过SparkContext来创建RDD
