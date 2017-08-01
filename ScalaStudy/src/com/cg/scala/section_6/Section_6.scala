@@ -1,9 +1,10 @@
 package com.cg.scala.section_6
 
 /**
+  * 第六节 类定义、创建对象
   *
   * @author ： Cheng Guang
-  **/
+  */
 object Section_6 {
   var studentNo:Int=0;
 
@@ -19,6 +20,11 @@ object Section_6 {
     p.getName
     p.age_=(5)
     print(p)
+  }
+
+  def test(i: Int) = {
+    studentNo += 1
+    studentNo
   }
 
 }
