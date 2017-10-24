@@ -20,8 +20,9 @@ object WordCount {
       * 可以去spark官网查看它们不同的意义。 如果要运行在集群中，以Standalone模式运行的话，需要使用spark://HOST:PORT
       * 的形式指定master的IP和端口号，默认是7077
       */
-//    val conf = new SparkConf().setAppName("WordCount").setMaster("local")
-      val conf = new SparkConf().setAppName("WordCount").setMaster("spark://master.hadoop:7077")  // 运行在集群中
+    val conf = new SparkConf().setAppName("WordCount")
+//  val conf = new SparkConf().setAppName("WordCount").setMaster("local")
+//  val conf = new SparkConf().setAppName("WordCount").setMaster("spark://master.hadoop:7077")  // 运行在集群中
 
     /**
       * 第2步：创建SparkContext 对象
@@ -35,8 +36,7 @@ object WordCount {
 
     /**
       * 第3步： 根据具体的数据来源(HDFS、 HBase、Local FS、DB、 S3等)通过SparkContext来创建RDD
-      * RDD 的创建基本有三种方式： 根据外部的数据来源(例如HDFS)、根据Scala集合使用SparkContext的parallelize方法、
-      * 由其他的RDD操作产生
+      * RDD 的创建基本有三种方式： 根据外部的数据来源(例如HDFS)、根据Scala集合使用SparkContext的parallelize方法、由其他的RDD操作产生
       * 数据会被RDD划分成为一系列的Partitions，分配到每个Partition的数据属于一个Task的处理范畴
       */
     val filePath= args(0);

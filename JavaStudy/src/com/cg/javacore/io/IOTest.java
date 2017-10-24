@@ -1,8 +1,9 @@
 package com.cg.javacore.io;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.mongodb.internal.HexUtils;
+import org.junit.Test;
+
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -43,4 +44,70 @@ public class IOTest {
         }
 
     }
+
+    @Test
+    public void streamingTest(){
+        InputStream in = null;
+        OutputStream out = null;
+
+        Reader reader = null;
+        Writer writer = null;
+        try {
+            in = new FileInputStream("C:\\Users\\Administrator\\Desktop\\a.txt");
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = in.read(bytes)) != -1) {
+                System.out.println(HexUtils.toHex(bytes));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Test
+    public void readerTest(){
+        Reader reader = null;
+        Writer writer = null;
+        try {
+            reader = new InputStreamReader(new FileInputStream("C:\\Users\\Administrator\\Desktop\\a.txt"),"UTF-8");
+            char[] data = new char[10];
+            reader.read(data);
+            for (char c : data) {
+                System.out.println(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }

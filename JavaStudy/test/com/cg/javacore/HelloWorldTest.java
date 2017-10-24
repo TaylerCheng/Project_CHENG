@@ -1,8 +1,11 @@
 package com.cg.javacore;
 
 import com.mongodb.internal.HexUtils;
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 import org.junit.Test;
 
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,6 +120,19 @@ public class HelloWorldTest {
     public void test010() throws Exception {
         System.out.println(System.getProperties().getProperty("file.encoding"));
         System.out.println(Charset.defaultCharset());
+    }
+
+    @Test
+    public void test011() throws Exception {
+        FileInputStream fis = new FileInputStream("C:\\Users\\Administrator\\Desktop\\UTF-8+.txt");
+
+        BOMInputStream bomIn = new BOMInputStream(fis, ByteOrderMark.UTF_8);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+        String line = br.readLine();
+        System.out.println(line);
+        br.close();
     }
 
 }
