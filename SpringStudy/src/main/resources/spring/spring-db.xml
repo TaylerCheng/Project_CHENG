@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 使用spring自带的占位符替换功能 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName"
+                  value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:db.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--DB-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl"
+                  value="jdbc:mysql://${db.jdbcUrl}?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull"/>
+        <property name="user" value="${db.user}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="acquireIncrement" value="${db.acquireIncrement}"/>
+        <property name="initialPoolSize" value="${db.initialPoolSize}"/>
+        <property name="maxPoolSize" value="${db.maxPoolSize}"/>
+        <property name="minPoolSize" value="${db.minPoolSize}"/>
+        <property name="maxIdleTime" value="${db.maxIdleTime}"/>
+    </bean>
+
+    <!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">-->
+        <!--<constructor-arg name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="userDao" class="JdbcUserDao">-->
+        <!--&lt;!&ndash;<property name="jdbcTemplate" ref="jdbcTemplate"/>&ndash;&gt;-->
+    <!--</bean>-->
+
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation"
+                  value="classpath:mybatis/generatorConfig.xml"/>
+        <property name="mapperLocations"
+                  value="classpath*:mybatis/xml/**/*.xml"/>
+        <property name="typeAliasesPackage"
+                  value="com.zealfi.bdxiaodai.apigw.ksdao.model.pojo"/>
+    </bean>
+
+</beans>

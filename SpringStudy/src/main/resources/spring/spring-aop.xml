@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--前置通知类-->
+    <bean id="myMethodBeforeAdvice" class="com.cg.springstudy.aop.advice.MyMethodBeforeAdvice"/>
+
+    <aop:config>
+        <!--全局切点-->
+        <aop:pointcut id="sayHello"
+                      expression="execution(* com.cg.springstudy.aop.service.IMyHelloService.sayHello())"/>
+
+        <aop:aspect ref="myMethodBeforeAdvice">
+            <!--切面内的切点-->
+            <aop:pointcut id="sayHelloToSomeBody"
+                          expression="execution(* com.cg.springstudy.aop.service.IMyHelloService.sayHello(..)) and args(..,name)
+                          or execution(* com.cg.springstudy.aop.service.impl.PojoHelloService.sayHelloToSomeBody(String)) and args(name) "/>
+            <aop:before pointcut-ref="sayHello" method="beforeHello"/>
+            <!--可传参数进去-->
+            <aop:before pointcut-ref="sayHelloToSomeBody" method="beforeName" arg-names="name"/>
+        </aop:aspect>
+    </aop:config>
+
+
+    <!--定义引入通知，引入通知是通过配置的，实现自定义切入点，和上述四个通知配合使用 -->
+    <!--<bean id="nameMatchMethodPointcutAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">-->
+    <!--<property name="advice" ref="myMethodBeforeAdvice"/>-->
+    <!--<property name="mappedNames">-->
+    <!--<list>-->
+    <!--<value>sayH*</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+
+    <!--&lt;!&ndash;定义代理类&ndash;&gt;-->
+    <!--<bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">-->
+    <!--&lt;!&ndash;定义代理的接口&ndash;&gt;-->
+    <!--<property name="proxyInterfaces" >-->
+    <!--<list>-->
+    <!--<value>com.cg.web.spring.aop.jaxws.IMyHelloService</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--&lt;!&ndash;定义通知（拦截器）&ndash;&gt;-->
+    <!--<property name="interceptorNames">-->
+    <!--<list>-->
+    <!--&lt;!&ndash;<value>myMethodBeforeAdvice</value>&ndash;&gt;-->
+    <!--<value>nameMatchMethodPointcutAdvisor</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--&lt;!&ndash;定义代理对象，织入通知&ndash;&gt;-->
+    <!--<property name="target" ref="iMyHelloService"/>-->
+    <!--</bean>-->
+
+</beans>
