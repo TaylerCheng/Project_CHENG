@@ -1,4 +1,4 @@
-package com.cg.springstudy.dao;
+package com.cg.springstudy.dao.jdbc.impl;
 
 import com.cg.springstudy.dao.mybatis.pojo.User;
 

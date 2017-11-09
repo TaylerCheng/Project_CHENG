@@ -1,6 +1,5 @@
-package com.cg.springstudy.dao.impl;
+package com.cg.springstudy.dao.jdbc.impl;
 
-import com.cg.springstudy.dao.UserDao;
 import com.cg.springstudy.dao.mybatis.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
