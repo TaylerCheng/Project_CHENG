@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
-* ¹ş¹ş
+* å“ˆå“ˆ
 */
 public class Server {
 
@@ -20,22 +20,22 @@ public class Server {
 
 	public Server(int port) {
 		try {
-            //½¨Á¢·şÎñÆ÷
+            //å»ºç«‹æœåŠ¡å™¨
 			serverSocket = new ServerSocket(port);
-            //µÈ´ıÁ¬½Ó			
-			//System.out.println("·şÎñÆ÷¿ªÆô,µÈ´ıÁ¬½Ó~~~");
+            //ç­‰å¾…è¿æ¥			
+			//System.out.println("æœåŠ¡å™¨å¼€å¯,ç­‰å¾…è¿æ¥~~~");
 			s = serverSocket.accept();
-            //»ñµÃÊäÈëÄÚÈİ
+            //è·å¾—è¾“å…¥å†…å®¹
 			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			//·µ»ØÄÚÈİ
+			//è¿”å›å†…å®¹
 			PrintWriter pw = new PrintWriter(s.getOutputStream(), true);
-			//´Ó¿ØÖÆÌ¨»ñÈ¡×Ö·û´®
+			//ä»æ§åˆ¶å°è·å–å­—ç¬¦ä¸²
 			br2 = new BufferedReader(new InputStreamReader(System.in));
 
 			while (true) {
 				String requset = br.readLine();
-				System.out.println("³Ì¹ã:  " + requset);
-				System.out.print("ÉÛ³¿³¿:");
+				System.out.println("ç¨‹å¹¿:  " + requset);
+				System.out.print("é‚µæ™¨æ™¨:");
 				String response = br2.readLine();
 				pw.println(response);
 			}
