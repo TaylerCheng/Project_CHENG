@@ -12,18 +12,9 @@ import java.util.Date;
  */
 public class SayHelloJob implements Job {
 
-    private String cronSchedule;
-
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         System.out.println("Hello,the time now is" + new Date());
     }
 
-    public String getCronSchedule() {
-        return cronSchedule;
-    }
-
-    public void setCronSchedule(String cronSchedule) {
-        this.cronSchedule = cronSchedule;
-    }
 }

@@ -10,6 +10,7 @@
     <!--<import resource="classpath:spring/spring-dubbo-consumer.xml"/>-->
     <!--<import resource="classpath:spring/spring-dubbo-provider.xml"/>-->
     <!--<import resource="classpath:spring/spring-aop.xml"/>-->
+    <import resource="classpath:spring/spring-quartz.xml"/>
 
     <!-- 该配置会自动扫描Spring组件注解 -->
     <context:component-scan base-package="com.cg.springstudy"/>

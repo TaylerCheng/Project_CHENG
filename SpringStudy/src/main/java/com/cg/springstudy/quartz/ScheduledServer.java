@@ -10,31 +10,31 @@ import org.quartz.impl.StdSchedulerFactory;
  */
 public class ScheduledServer {
 
+    private static final String DEFAULT_CRON_SCHEDULE = "0/5 * * * * ?";
+
     public static void main(String[] args) throws SchedulerException {
-        SayHelloJob sayHelloJob = new SayHelloJob();
-        sayHelloJob.setCronSchedule("0/5 * * * * ?");
         // Job Name
         String jobName = SayHelloJob.class.getSimpleName();
 
         // Build job detail instance
         JobDataMap jobDataMap = new JobDataMap( );
         JobDetail jobDetail = JobBuilder.newJob()
-//                .withIdentity(jobName, "FirstGroup")
-                .ofType(sayHelloJob.getClass())
+                .withIdentity(jobName, "FirstGroup")
+                .ofType(SayHelloJob.class)
 //                .setJobData(jobDataMap)
                 .build();
 
         // Build trigger instance
         CronTrigger trigger = TriggerBuilder.newTrigger()
+                .forJob(jobDetail)
                 .withIdentity(jobName + "-Trigger", "FirstGroupTrigger")
-                .withSchedule(CronScheduleBuilder.cronSchedule(sayHelloJob.getCronSchedule()))
+                .withSchedule(CronScheduleBuilder.cronSchedule(DEFAULT_CRON_SCHEDULE))
                 .build();
 
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler( );
         scheduler.start( );
 
         scheduler.scheduleJob(jobDetail,trigger);
-
     }
 
 }
