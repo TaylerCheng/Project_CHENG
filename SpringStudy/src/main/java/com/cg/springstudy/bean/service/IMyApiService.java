@@ -1,5 +1,6 @@
 package com.cg.springstudy.bean.service;
 
+import com.cg.springstudy.dao.mybatis.pojo.User;
 import org.springframework.scheduling.annotation.Async;
 
 /**
@@ -12,4 +13,6 @@ public interface IMyApiService {
 
     @Async
     void asyncSayHello(int i) throws InterruptedException;
+
+    void doSomeError(User user2);
 }

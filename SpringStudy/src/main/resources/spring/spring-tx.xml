@@ -16,27 +16,27 @@
     </bean>
 
     <!--1、使用注解配置事务-->
-    <!--<tx:annotation-driven transaction-manager="myTransactionManager"/>-->
+    <tx:annotation-driven transaction-manager="myTransactionManager"/>
 
     <!--2、使用XML配置事务-->
-    <tx:advice id="txAdvice" transaction-manager="myTransactionManager">
-        <tx:attributes>
-            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="generate*" propagation="REQUIRES_NEW" rollback-for="Exception"/>
-            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="handle*" propagation="REQUIRED" rollback-for="Exception"/>
-            <tx:method name="inner*" propagation="REQUIRES_NEW" rollback-for="Exception"/>
-            <tx:method name="batchInner*" propagation="REQUIRES_NEW" rollback-for="Exception"/>
-            <tx:method name="*" propagation="SUPPORTS" read-only="true"/>
-        </tx:attributes>
-    </tx:advice>
+    <!--<tx:advice id="txAdvice" transaction-manager="myTransactionManager">-->
+        <!--<tx:attributes>-->
+            <!--<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="generate*" propagation="REQUIRES_NEW" rollback-for="Exception"/>-->
+            <!--<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="handle*" propagation="REQUIRED" rollback-for="Exception"/>-->
+            <!--<tx:method name="inner*" propagation="REQUIRES_NEW" rollback-for="Exception"/>-->
+            <!--<tx:method name="batchInner*" propagation="REQUIRES_NEW" rollback-for="Exception"/>-->
+            <!--<tx:method name="*" propagation="SUPPORTS" read-only="true"/>-->
+        <!--</tx:attributes>-->
+    <!--</tx:advice>-->
 
-    <aop:config>
-        <aop:pointcut id="interceptorPointCuts" expression="execution(* com.cg.springstudy..*.*(..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>
-    </aop:config>
+    <!--<aop:config>-->
+        <!--<aop:pointcut id="interceptorPointCuts" expression="execution(* com.cg.springstudy..*.*(..))"/>-->
+        <!--<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>-->
+    <!--</aop:config>-->
 
 </beans>

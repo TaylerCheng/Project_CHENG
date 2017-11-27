@@ -1,5 +1,6 @@
 package com.cg.springstudy.tx;
 
+import com.cg.springstudy.bean.service.IMyApiService;
 import com.cg.springstudy.dao.mybatis.mapper.UserMapper;
 import com.cg.springstudy.dao.mybatis.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,30 @@ public class UserServiceImpl {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private IMyApiService myApiService;
 
-//    @Transactional
+
+    @Transactional
     public void saveError(User user1, User user2) {
         try {
             userMapper.insertSelective(user1);
-            System.out.println(10 / 0); // 引发异常
+            myApiService.doSomeError(user2);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        userMapper.insert(user2);
+        System.out.println("------END---------");
     }
+
+//    @Transactional
+//    public void doSomeError() {
+//        try {
+//            userMapper.insertSelective(null);
+//            System.out.println(10 / 0); // 引发异常
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * 保存两个user对象. 添加了spring事务注解
