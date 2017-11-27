@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
  * @author： Cheng Guang
  * @date： 2017/4/21.
  */
-//@Service
+@Service
 public class SpringHelloWorld {
 
     //    {

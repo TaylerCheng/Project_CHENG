@@ -1,6 +1,4 @@
-package com.cg.springstudy.service;
-
-import org.springframework.scheduling.annotation.Async;
+package com.cg.springstudy.bean.service;
 
 /**
  * @author： Cheng Guang

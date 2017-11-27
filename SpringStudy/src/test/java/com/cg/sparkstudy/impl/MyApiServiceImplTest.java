@@ -1,6 +1,6 @@
 package com.cg.sparkstudy.impl;
 
-import com.cg.springstudy.service.IMyApiService;
+import com.cg.springstudy.bean.service.IMyApiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

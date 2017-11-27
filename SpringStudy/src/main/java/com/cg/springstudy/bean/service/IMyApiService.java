@@ -1,4 +1,4 @@
-package com.cg.springstudy.service;
+package com.cg.springstudy.bean.service;
 
 import org.springframework.scheduling.annotation.Async;
 

@@ -5,12 +5,10 @@
        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <!--<import resource="classpath:spring/spring-cxf.xml"/>-->
     <!--<import resource="classpath:spring/spring-db.xml"/>-->
-    <!--<import resource="classpath:spring/spring-dubbo-consumer.xml"/>-->
-    <!--<import resource="classpath:spring/spring-dubbo-provider.xml"/>-->
     <!--<import resource="classpath:spring/spring-aop.xml"/>-->
-    <import resource="classpath:spring/spring-quartz.xml"/>
+    <!--<import resource="classpath:spring/spring-quartz.xml"/>-->
+    <import resource="classpath:spring/spring-tx.xml"/>
 
     <!-- 该配置会自动扫描Spring组件注解 -->
     <context:component-scan base-package="com.cg.springstudy"/>
@@ -24,6 +22,7 @@
     <!-- 支持异步方法执行 -->
     <task:annotation-driven/>
 
-    <bean id ="springHelloWorld" class="com.cg.springstudy.bean.SpringHelloWorld"/>
+    <!--使用XML配置Bean-->
+    <!--<bean id ="springHelloWorld" class="com.cg.springstudy.bean.SpringHelloWorld"/>-->
 
 </beans>
