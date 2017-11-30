@@ -57,7 +57,7 @@ public class NewKafkaProducer {
             producer.send(new ProducerRecord<String, String>(TOPIC, key, message + i));
             System.out.println("Producer端发送消息: " + message + i);
         }
-        producer.flush();
+//        producer.flush();
 
     }
 
