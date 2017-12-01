@@ -43,7 +43,7 @@ public class Test {
 //        }  
 		
 //		
-//		gmv.sayHello();
+//		gmv.changeName();
 		
 	}
 }

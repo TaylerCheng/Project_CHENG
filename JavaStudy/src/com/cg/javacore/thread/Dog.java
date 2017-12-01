@@ -1,13 +1,27 @@
 package com.cg.javacore.thread;
 
-import java.util.ArrayList;
-import java.util.Vector;
-
 public class Dog implements Runnable {
 
-	private static ArrayList<String> names = new ArrayList<String>();
+	private String name = "oldName";
 
-	private String name = null;
+	@Override
+	public void run() {
+		try {
+			changeName();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void changeName() throws InterruptedException {
+		synchronized (this) {
+			System.out.println(Thread.currentThread().getName()+"获得对象锁");
+			System.out.println(Thread.currentThread().getName()+"狗的名字"+this.name);
+			Thread.currentThread().sleep(10 * 1000);
+			System.out.println(Thread.currentThread().getName()+"狗的名字"+this.name);
+			System.out.println(Thread.currentThread().getName()+"释放对象锁");
+		}
+	}
 
 	public String getName() {
 		return name;
@@ -17,26 +31,4 @@ public class Dog implements Runnable {
 		this.name = name;
 	}
 
-	public static void main(String[] args) {
-		Dog dog = new Dog();
-
-		Thread thread = new Thread(dog);
-		thread.start();
-
-		Thread thread2 = new Thread(dog);
-		thread2.start();
-
-		for (String name : names) {
-			System.out.println(name);
-		}
-	}
-
-	@Override
-	public void run() {
-		sayHello();
-	};
-
-	public void sayHello() {
-		names.add(Thread.currentThread().toString());
-	}
 }
